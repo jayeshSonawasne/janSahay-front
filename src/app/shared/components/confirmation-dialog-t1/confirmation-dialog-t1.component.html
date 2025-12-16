@@ -1,0 +1,26 @@
+<div mat-dialog-title class="modal-header">
+    <div class="d-flex justify-content-between align-items-center w-100">
+        {{data?.header}}
+        <button mat-icon-button class="btn-modal-close" mat-dialog-close>
+            <mat-icon class="material-symbols-rounded">
+                close
+            </mat-icon>
+        </button>
+    </div>
+</div>
+<mat-dialog-content class="modal-body " id="confirmation-dialog">
+    <div class="text-center">
+        <img [src]="data?.imgObj?.imgPath" alt="" [attr.height]="data?.imgObj?.imgHeight">
+        <h6 *ngIf="data?.titles?.main_title">{{data?.titles?.main_title}}</h6>
+        <p *ngIf="data?.titles?.sub_title">{{data?.titles?.sub_title}}</p>
+    </div>
+
+</mat-dialog-content> 
+<mat-dialog-actions>
+    <div class="d-flex justify-content-end gap-1 w-100" *ngIf="data?.btns?.cancelButton || data?.btns?.successButton">
+        <button mat-flat-button type="button" class="btn-second ms-0" (click)="closeDialog('No')"
+            *ngIf="data?.btns?.cancelButton">{{data?.btns?.cancelButton}}</button>
+        <button mat-flat-button type="button" class="btn-main" (click)="closeDialog('Yes')"
+            *ngIf="data?.btns?.successButton">{{data?.btns?.successButton}}</button>
+    </div>
+</mat-dialog-actions>

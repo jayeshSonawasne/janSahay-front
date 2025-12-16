@@ -1,0 +1,1145 @@
+<!-- chatbox.component.html -->
+<div class="chatbox-container">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+
+    <!-- Left: AI + Title -->
+    <div class="d-flex align-items-center gap-3">
+      <div>
+        <img src="assets/images/jansahayLogo.png" alt="AI Logo" class="ai-logo">
+      </div>
+      <div>
+        <h3 class="m-0">{{ 'app.title' | translate }}</h3>
+      </div>
+    </div>
+
+    <!-- Right: Icons -->
+    <div class="d-flex align-items-center gap-3">
+
+      <!-- Notification Button -->
+      <button class="icon-btn position-relative">
+        <i class="bi bi-bell"></i>
+        <span class="badge rounded-pill">3</span>
+      </button>
+
+      <!-- Translate Button -->
+      <!-- Translate Button -->
+      <button class="icon-btn" (click)="toggleLanguage()"
+        [title]="(translationService.currentLang$ | async) === 'en' ? 'Switch to Marathi' : 'Switch to English'">
+        <i class="bi bi-translate"></i>
+        <span class="ms-1 small fw-bold">{{ (translationService.currentLang$ | async) === 'en' ? 'EN' : 'MR' }}</span>
+      </button>
+
+      <!-- Dark Mode Button -->
+      <button class="icon-btn">
+        <i class="bi bi-moon"></i>
+      </button>
+
+      <!-- Settings Button -->
+      <button class="icon-btn">
+        <i class="bi bi-gear"></i>
+      </button>
+
+      <!-- User Button -->
+      <button class="avatar-btn">
+        JD
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- Chat Messages Area -->
+  <div class="d-flex flex-grow-1 border rounded overflow-hidden main-chat-area">
+
+    <!-- Left Sidebar -->
+    <div class="left-sidebar">
+      <!-- Menu Header -->
+      <div class="sidebar-header">
+        <h5 class="m-0">{{ 'menu.title' | translate }}</h5>
+      </div>
+
+      <!-- Body -->
+      <div class="sidebar-body">
+
+        <!-- New Chat -->
+        <button class="menu-btn w-100 mb-3" (click)="startNewChat()">
+          <i class="bi bi-chat-left-text"></i>
+          {{ 'menu.newChat' | translate }}
+        </button>
+
+        <!-- Menu Items -->
+        <div class="menu-item">
+          <i class="bi bi-clock-history"></i> {{ 'menu.chatHistory' | translate }}
+        </div>
+
+        <div class="menu-item">
+          <i class="bi bi-file-earmark-text"></i> {{ 'menu.myApplication' | translate }}
+        </div>
+
+        <div class="menu-item">
+          <i class="bi bi-question-circle"></i> {{ 'menu.helpSupport' | translate }}
+        </div>
+
+        <hr class="my-4">
+
+        <!-- Recent Chats -->
+        <h6 class="fw-bold mb-3">{{ 'menu.recentChats' | translate }}</h6>
+
+        <div *ngIf="chatHistory.length === 0" class="text-muted small text-center py-3">
+          {{ 'chat.noHistory' | translate }}
+        </div>
+
+        <div class="recent-chat" *ngFor="let chat of chatHistory" (click)="onChatHistoryClick(chat)">
+          {{ chat.title }} <br>
+          <small class="text-muted">{{ getRelativeTime(chat.timestamp) }}</small>
+        </div>
+
+        <!-- Clear History Button -->
+        <button *ngIf="chatHistory.length > 0" class="menu-btn w-100 mt-3 btn-outline-danger"
+          (click)="clearChatHistory()">
+          <i class="bi bi-trash"></i>
+          {{ 'chat.clearHistory' | translate }}
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Main chat area with right content -->
+    <div class="chatbox-wrapper">
+      <!-- Chatbot Container -->
+      <div class="chatbox-container card-shadow" [class.collapsed]="isShrink">
+
+        <!-- Header -->
+        <div class="chat-header d-flex justify-content-between align-items-start">
+          <div>
+            <div class="chat-title">{{ 'chat.title' | translate }}</div>
+            <div class="chat-sub">{{ 'chat.subtitle' | translate }}</div>
+          </div>
+
+          <button class="resize-btn" (click)="toggleChatSize()" aria-label="Expand / Shrink">
+            <i class="bi" [ngClass]="isShrink ? 'bi-arrows-angle-expand' : 'bi-arrows-angle-contract'"></i>
+          </button>
+        </div>
+
+        <!-- Messages area -->
+        <div class="chat-body">
+
+          <!-- Assistant message -->
+          <div class="assistant-row d-flex align-items-start">
+            <div class="assistant-avatar">
+              <i class="bi bi-braces fs-5"></i>
+            </div>
+
+            <div class="assistant-msg">
+              {{ 'welcome.title' | translate }}<br>
+              {{ 'welcome.desc' | translate }}
+              <div class="msg-time">10:30 AM</div>
+            </div>
+          </div>
+
+          <!-- Quick replies -->
+          <div class="quick-replies mt-3">
+            <button class="chip" *ngFor="let q of quickReplies" [class.selected]="q===selectedQuick"
+              (click)="onQuickReply(q)">
+              {{ q | translate }}
+            </button>
+          </div>
+
+          <!-- Dynamic Messages -->
+          <div *ngFor="let msg of messages" class="message-row d-flex align-items-start"
+            [class.user-row]="msg.from === 'user'" [class.assistant-row]="msg.from === 'assistant'">
+
+            <div class="user-avatar" *ngIf="msg.from === 'user'">
+              <i class="bi bi-person fs-5"></i>
+            </div>
+
+            <div class="assistant-avatar" *ngIf="msg.from === 'assistant'">
+              <i class="bi bi-braces fs-5"></i>
+            </div>
+
+            <div class="message-bubble" [class.user-msg]="msg.from === 'user'"
+              [class.assistant-msg]="msg.from === 'assistant'">
+
+              <!-- Regular text message -->
+              <div *ngIf="!msg.isStructured && !msg.isAccordion">
+                {{ msg.text }}
+                <div class="msg-time">{{ msg.time }}</div>
+              </div>
+
+              <!-- Accordion message -->
+              <div *ngIf="msg.isAccordion" class="accordion-message">
+                <h6 class="accordion-title">{{ msg.accordionData?.title }}</h6>
+                <p class="accordion-description">{{ msg.accordionData?.description }}</p>
+
+                <!-- Schemes List -->
+                <div *ngFor="let scheme of msg.accordionData?.schemes" class="scheme-accordion">
+
+                  <!-- Scheme Header -->
+                  <div class="scheme-header" (click)="toggleAccordion(scheme.id)">
+                    <div class="scheme-info">
+                      <div class="scheme-name">{{ scheme.name }}</div>
+                      <div class="scheme-meta">
+                        <span class="scheme-category">{{ scheme.category }}</span>
+                        <span class="scheme-ministry">{{ scheme.ministry }}</span>
+                      </div>
+                    </div>
+                    <div class="scheme-toggle">
+                      <i class="bi" [ngClass]="scheme.isExpanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                    </div>
+                  </div>
+
+                  <!-- Scheme Content (Accordion Body) -->
+                  <div class="scheme-content" [class.expanded]="scheme.isExpanded">
+
+                    <!-- Accordion Sections -->
+                    <div *ngFor="let section of scheme.sections" class="accordion-section">
+                      <div class="section-title">{{ section.title }}</div>
+                      <div class="section-content" [innerHTML]="section.content"></div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="scheme-actions">
+                      <button *ngFor="let action of scheme.actions" class="action-btn"
+                        [class.primary]="action.type === 'primary'" [class.secondary]="action.type === 'secondary'"
+                        [class]="action.color" (click)="onActionClick(action.label, scheme.name)">
+                        <i class="bi {{ action.icon }}"></i>
+                        {{ action.label }}
+                      </button>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="msg-time">{{ msg.time }}</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- AI Response Loading Indicator -->
+          <div *ngIf="isGeneratingResponse" class="message-loading">
+            <div class="loading-avatar">
+              <i class="bi bi-braces fs-5"></i>
+            </div>
+            <div class="loading-message">
+              <div class="chat-bot-loader"></div>
+              <span class="loading-text">{{ 'chat.loading' | translate }}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Input area -->
+        <div class="chat-input d-flex align-items-center gap-2">
+          <button class="icon-btn-plain" (click)="attachFile()" aria-label="Attach">
+            <i class="bi bi-paperclip"></i>
+          </button>
+
+          <input type="text" class="form-control input-field" [placeholder]="'input.placeholder' | translate"
+            [(ngModel)]="message" (keydown.enter)="sendMessage()" />
+
+          <div class="input-right d-flex align-items-center gap-2">
+            <button class="icon-btn-plain" (click)="toggleMic()" title="Voice">
+              <i class="bi bi-mic"></i>
+            </button>
+            <button class="icon-btn-plain" (click)="toggleNetwork()" title="Network">
+              <i class="bi bi-wifi"></i>
+            </button>
+
+            <button class="send-btn" (click)="sendMessage()" aria-label="Send" [disabled]="isGeneratingResponse">
+              <i class="bi bi-send-fill"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Right content area -->
+      <div class="right-content" [class.expanded]="isShrink">
+        <div class="right-content-inner">
+
+          <!-- Tabs Navigation -->
+          <div class="right-content-tabs">
+            <button class="tab-btn" [class.active]="activeTab === 'discover'" (click)="activeTab = 'discover'">
+              <i class="bi bi-compass"></i>
+              {{ 'tab.discover' | translate }}
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'eligibility'" (click)="activeTab = 'eligibility'">
+              <i class="bi bi-person-check"></i>
+              {{ 'tab.eligibility' | translate }}
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'apply'" (click)="activeTab = 'apply'">
+              <i class="bi bi-pencil-square"></i>
+              {{ 'tab.apply' | translate }}
+            </button>
+            <button class="tab-btn" [class.active]="activeTab === 'updates'" (click)="activeTab = 'updates'">
+              <i class="bi bi-bell"></i>
+              {{ 'tab.updates' | translate }}
+            </button>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+
+            <!-- Discover Tab -->
+            <div *ngIf="activeTab === 'discover'" class="tab-pane">
+              <h5 class="section-title">{{ 'section.categories' | translate }}</h5>
+
+              <div class="categories-grid">
+                <div class="category-card" *ngFor="let category of categories" (click)="onCategoryClick(category)">
+                  <div class="category-icon">
+                    <i class="bi {{ category.icon }}"></i>
+                  </div>
+                  <div class="category-name">{{ category.name | translate }}</div>
+                  <div class="category-count">{{ category.count }} {{ 'text.schemes' | translate }}</div>
+                </div>
+              </div>
+
+              <div class="schemes-list">
+                <div class="scheme-card" *ngFor="let scheme of featuredSchemes" (click)="onSchemeClick(scheme)">
+                  <div class="scheme-header">
+                    <h6 class="scheme-title">{{ scheme.name }}</h6>
+                    <div class="scheme-badge" [class]="scheme.status">{{ scheme.status }}</div>
+                  </div>
+                  <p class="scheme-description">{{ scheme.description }}</p>
+                  <div class="scheme-tags">
+                    <span class="scheme-tag" *ngFor="let tag of scheme.tags">{{ tag }}</span>
+                  </div>
+                  <div class="scheme-actions">
+                    <button class="scheme-action-btn" (click)="viewSchemeDetails(scheme)">{{ 'btn.viewDetails' |
+                      translate }}</button>
+                    <button class="scheme-action-btn primary" (click)="openApplyModal(scheme)">{{ 'btn.applyNow' |
+                      translate }}</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="quick-links">
+                <h6>{{ 'section.quickLinks' | translate }}</h6>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Saved Schemes'})">
+                  <i class="bi bi-bookmark"></i>
+                  {{ 'link.saved' | translate }}
+                </div>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'My Eligibility'})">
+                  <i class="bi bi-person-check"></i>
+                  {{ 'link.eligibility' | translate }}
+                </div>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Calculator'})">
+                  <i class="bi bi-calculator"></i>
+                  {{ 'link.calculator' | translate }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Eligibility Tab -->
+            <div *ngIf="activeTab === 'eligibility'" class="tab-pane">
+              <h5 class="section-title">{{ 'section.eligibility' | translate }}</h5>
+
+              <div class="eligibility-form">
+                <div class="form-group">
+                  <label>{{ 'label.age' | translate }}:</label>
+                  <input type="number" class="form-control" [placeholder]="'placeholder.age' | translate"
+                    [(ngModel)]="eligibilityForm.age" (input)="onEligibilityFieldChange()">
+                </div>
+
+                <div class="form-group">
+                  <label>{{ 'label.gender' | translate }}:</label>
+                  <select class="form-control" [(ngModel)]="eligibilityForm.gender"
+                    (change)="onEligibilityFieldChange()">
+                    <option>{{ 'option.selectGender' | translate }}</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>{{ 'label.income' | translate }}:</label>
+                  <input type="number" class="form-control" [placeholder]="'placeholder.income' | translate"
+                    [(ngModel)]="eligibilityForm.income" (input)="onEligibilityFieldChange()">
+                </div>
+
+                <div class="form-group">
+                  <label>{{ 'label.occupation' | translate }}:</label>
+                  <select class="form-control" [(ngModel)]="eligibilityForm.occupation"
+                    (change)="onEligibilityFieldChange()">
+                    <option>{{ 'option.selectOccupation' | translate }}</option>
+                    <option>Farmer</option>
+                    <option>Student</option>
+                    <option>Women</option>
+                    <option>Senior Citizen</option>
+                    <option>Self Employed</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>{{ 'label.state' | translate }}:</label>
+                  <select class="form-control" [(ngModel)]="eligibilityForm.state"
+                    (change)="onEligibilityFieldChange()">
+                    <option>{{ 'option.selectState' | translate }}</option>
+                    <option>Delhi</option>
+                    <option>Maharashtra</option>
+                    <option>Karnataka</option>
+                    <option>Tamil Nadu</option>
+                    <option>Uttar Pradesh</option>
+                  </select>
+                </div>
+
+                <button class="check-eligibility-btn" (click)="checkEligibility()" [disabled]="isLoading">
+                  {{ isLoading ? ('btn.checking' | translate) : ('btn.check' | translate) }}
+                </button>
+              </div>
+
+              <div class="eligibility-results" *ngIf="showEligibilityResults">
+                <h6>{{ 'eligibility.results' | translate }}:</h6>
+                <div class="result-item" (click)="onEligibilityResultClick('PMAY')">
+                  <span class="scheme-name">PMAY</span>
+                  <span class="match-percent">85% {{ 'eligibility.match' | translate }}</span>
+                </div>
+                <div class="result-item" (click)="onEligibilityResultClick('PM Kisan')">
+                  <span class="scheme-name">PM Kisan</span>
+                  <span class="match-percent">50% {{ 'eligibility.match' | translate }}</span>
+                </div>
+              </div>
+
+              <div class="quick-links">
+                <h6>{{ 'text.quickLinks' | translate }}</h6>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Saved Schemes'})">
+                  <i class="bi bi-bookmark"></i>
+                  {{ 'link.saved' | translate }}
+                </div>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'My Eligibility'})">
+                  <i class="bi bi-person-check"></i>
+                  {{ 'link.eligibility' | translate }}
+                </div>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Calculator'})">
+                  <i class="bi bi-calculator"></i>
+                  {{ 'link.calculator' | translate }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Apply Tab -->
+            <div *ngIf="activeTab === 'apply'" class="tab-pane">
+              <h5 class="section-title">{{ 'section.application' | translate }}</h5>
+
+              <!-- Progress Overview -->
+              <div class="progress-overview" *ngIf="applicationProgress">
+                <div class="progress-percent">{{applicationProgress?.progress}}%</div>
+                <div class="progress-text">Application Completion</div>
+                <div class="progress-bar-overview">
+                  <div class="progress-fill-overview" [style.width.%]="applicationProgress?.progress"></div>
+                </div>
+                <div class="progress-stats">
+                  <span>Started: {{applicationProgress?.appliedDate}}</span>
+                  <span>{{applicationProgress?.currentStep}}</span>
+                </div>
+              </div>
+
+              <!-- Application Timeline -->
+              <div class="application-timeline">
+
+                <!-- Step 1: Application Submitted -->
+                <div class="timeline-item">
+                  <div class="timeline-marker completed"></div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <h6 class="timeline-title">Application Submitted</h6>
+                      <span class="timeline-status completed">Completed</span>
+                    </div>
+                    <p class="timeline-description">
+                      Your PMAY Urban application has been successfully submitted and is under initial review.
+                    </p>
+                    <div class="timeline-meta">
+                      <span class="timeline-date">
+                        <i class="bi bi-calendar"></i>
+                        Jan 16, 2025
+                      </span>
+                      <span class="timeline-duration">2 days</span>
+                    </div>
+                    <div class="timeline-actions">
+                      <button class="timeline-btn" (click)="viewApplicationDetails()">View Application</button>
+                      <button class="timeline-btn primary" (click)="downloadApplication()">Download PDF</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 2: Document Verification -->
+                <div class="timeline-item">
+                  <div class="timeline-marker current"></div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <h6 class="timeline-title">Document Verification</h6>
+                      <span class="timeline-status current">In Progress</span>
+                    </div>
+                    <p class="timeline-description">
+                      Your documents are being verified by the authorities. This may take 3-5 business days.
+                    </p>
+                    <div class="timeline-meta">
+                      <span class="timeline-date">
+                        <i class="bi bi-calendar"></i>
+                        Jan 18, 2025 - Present
+                      </span>
+                      <span class="timeline-duration">Current</span>
+                    </div>
+                    <div class="timeline-actions">
+                      <button class="timeline-btn" (click)="uploadAdditionalDocs()">Upload Documents</button>
+                      <button class="timeline-btn primary" (click)="checkVerificationStatus()">Check Status</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 3: Field Inspection -->
+                <div class="timeline-item">
+                  <div class="timeline-marker pending"></div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <h6 class="timeline-title">Field Inspection & Site Visit</h6>
+                      <span class="timeline-status pending">Scheduled</span>
+                    </div>
+                    <p class="timeline-description">
+                      A field officer will visit your property for physical verification and assessment.
+                    </p>
+                    <div class="timeline-meta">
+                      <span class="timeline-date">
+                        <i class="bi bi-calendar"></i>
+                        Dec 28, 2024
+                      </span>
+                      <span class="timeline-duration">Scheduled</span>
+                    </div>
+                    <div class="timeline-actions">
+                      <button class="timeline-btn" (click)="rescheduleAppointment()">Reschedule</button>
+                      <button class="timeline-btn primary" (click)="viewAppointmentDetails()">View Details</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 4: Approval & Disbursement -->
+                <div class="timeline-item">
+                  <div class="timeline-marker pending"></div>
+                  <div class="timeline-content">
+                    <div class="timeline-header">
+                      <h6 class="timeline-title">Approval & Subsidy Disbursement</h6>
+                      <span class="timeline-status pending">Pending</span>
+                    </div>
+                    <p class="timeline-description">
+                      Final approval and subsidy amount disbursement to your bank account.
+                    </p>
+                    <div class="timeline-meta">
+                      <span class="timeline-date">
+                        <i class="bi bi-calendar"></i>
+                        Estimated: Feb 15, 2025
+                      </span>
+                      <span class="timeline-duration">Next Step</span>
+                    </div>
+                    <div class="timeline-actions">
+                      <button class="timeline-btn" (click)="viewSubsidyDetails()">Subsidy Details</button>
+                      <button class="timeline-btn" (click)="contactSupport()">Support</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Document Checklist -->
+              <div class="document-checklist">
+                <div class="checklist-header">
+                  <h6 class="checklist-title">Required Documents</h6>
+                  <span class="checklist-count">
+                    {{getCompletedDocumentsCount()}}/{{applicationProgress?.documents?.length || 0}} Completed
+                  </span>
+                </div>
+
+                <div class="checklist-items">
+                  <div *ngFor="let doc of applicationProgress?.documents; let i = index" class="checklist-item"
+                    (click)="toggleDocumentCompletion(i)">
+                    <div class="checklist-checkbox" [class.completed]="doc.completed"></div>
+                    <span class="checklist-label" [class.completed]="doc.completed">{{doc.name}}</span>
+                    <span class="checklist-status" [class.completed]="doc.completed" [class.pending]="!doc.completed">
+                      {{doc.completed ? 'Verified' : 'Pending'}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="quick-actions mt-3">
+                <button class="btn btn-primary w-100" (click)="openApplyModal()">
+                  <i class="bi bi-plus-circle"></i>
+                  Track Another Application
+                </button>
+              </div>
+            </div>
+
+            <!-- Updates Tab -->
+            <div *ngIf="activeTab === 'updates'" class="tab-pane">
+              <h5 class="section-title">{{ 'section.updates' | translate }}</h5>
+
+              <div class="updates-list">
+                <div class="update-card" *ngFor="let update of updates" (click)="onUpdateClick(update)">
+                  <div class="update-badge" [class]="update.type">{{ update.type }}</div>
+                  <h6>{{ update.title }}</h6>
+                  <p>{{ update.description }}</p>
+                  <button class="read-more-btn">Read More →</button>
+                </div>
+              </div>
+
+              <div class="quick-links">
+                <h6>{{ 'text.quickLinks' | translate }}</h6>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Saved Schemes'})">
+                  <i class="bi bi-bookmark"></i>
+                  {{ 'link.saved' | translate }}
+                </div>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'My Eligibility'})">
+                  <i class="bi bi-person-check"></i>
+                  {{ 'link.eligibility' | translate }}
+                </div>
+                <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Calculator'})">
+                  <i class="bi bi-calculator"></i>
+                  {{ 'link.calculator' | translate }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Apply for Scheme Modal -->
+<div #applySchemeModal class="modal fade" id="applySchemeModal" tabindex="-1" aria-labelledby="applySchemeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="applySchemeModalLabel">Apply for Scheme - {{selectedScheme?.name || 'PMAY'}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <!-- Progress Indicator -->
+        <div class="application-progress mb-4">
+          <div class="progress-steps d-flex justify-content-between position-relative">
+            <div class="step" [class.active]="currentApplyStep === 1" [class.completed]="currentApplyStep > 1">
+              <div class="step-circle">1</div>
+              <div class="step-label">Basic Info</div>
+            </div>
+            <div class="step" [class.active]="currentApplyStep === 2" [class.completed]="currentApplyStep > 2">
+              <div class="step-circle">2</div>
+              <div class="step-label">Documents</div>
+            </div>
+            <div class="step" [class.active]="currentApplyStep === 3" [class.completed]="currentApplyStep > 3">
+              <div class="step-circle">3</div>
+              <div class="step-label">Review</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 1: Basic Information -->
+        <div *ngIf="currentApplyStep === 1" class="apply-step">
+          <h6 class="section-title mb-4">Basic Information</h6>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Full Name *</label>
+              <input type="text" class="form-control" [(ngModel)]="applicationForm.fullName"
+                placeholder="Enter your full name">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Email Address *</label>
+              <input type="email" class="form-control" [(ngModel)]="applicationForm.email"
+                placeholder="your.email@example.com">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Date of Birth *</label>
+              <input type="date" class="form-control" [(ngModel)]="applicationForm.dob">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" class="form-control" [(ngModel)]="applicationForm.phone" placeholder="+91 9876543210">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Gender *</label>
+              <select class="form-control" [(ngModel)]="applicationForm.gender">
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Category *</label>
+              <select class="form-control" [(ngModel)]="applicationForm.category">
+                <option value="">Select Category</option>
+                <option value="general">General</option>
+                <option value="obc">OBC</option>
+                <option value="sc">SC</option>
+                <option value="st">ST</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Identity & Documents -->
+        <div *ngIf="currentApplyStep === 2" class="apply-step">
+          <h6 class="section-title mb-4">Identity & Documents</h6>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Aadhaar Number *</label>
+              <input type="text" class="form-control" [(ngModel)]="applicationForm.aadhaar" placeholder="1234 5678 9012"
+                maxlength="14">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">PAN Number</label>
+              <input type="text" class="form-control" [(ngModel)]="applicationForm.pan" placeholder="ABCDE1234F">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 mb-3">
+              <label class="form-label">Full Address *</label>
+              <textarea class="form-control" [(ngModel)]="applicationForm.address"
+                placeholder="Enter your complete address" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <label class="form-label">City *</label>
+              <input type="text" class="form-control" [(ngModel)]="applicationForm.city" placeholder="Enter city">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">State *</label>
+              <select class="form-control" [(ngModel)]="applicationForm.state">
+                <option value="">Select State</option>
+                <option value="delhi">Delhi</option>
+                <option value="maharashtra">Maharashtra</option>
+                <option value="karnataka">Karnataka</option>
+                <option value="tamilnadu">Tamil Nadu</option>
+                <option value="up">Uttar Pradesh</option>
+              </select>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label class="form-label">Pincode *</label>
+              <input type="text" class="form-control" [(ngModel)]="applicationForm.pincode" placeholder="110001">
+            </div>
+          </div>
+
+          <div class="document-upload-section">
+            <h6 class="section-title mb-3">Upload Documents</h6>
+            <div class="document-upload-item" *ngFor="let doc of requiredDocuments; let i = index">
+              <div class="document-info">
+                <span class="document-name">{{doc.name}}</span>
+                <span class="document-status" [class.uploaded]="doc.uploaded">
+                  {{doc.uploaded ? 'Uploaded' : 'Pending'}}
+                </span>
+              </div>
+              <input type="file" class="d-none" [id]="'doc-' + i" (change)="onDocumentUpload($event, i)">
+              <label [for]="'doc-' + i" class="upload-btn">
+                <i class="bi bi-cloud-upload"></i>
+                Upload
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Review & Submit -->
+        <div *ngIf="currentApplyStep === 3" class="apply-step">
+          <h6 class="section-title mb-4">Review Your Application</h6>
+
+          <div class="review-section">
+            <div class="review-item">
+              <strong>Scheme:</strong> {{selectedScheme?.name || 'PMAY'}}
+            </div>
+            <div class="review-item">
+              <strong>Full Name:</strong> {{applicationForm.fullName}}
+            </div>
+            <div class="review-item">
+              <strong>Email:</strong> {{applicationForm.email}}
+            </div>
+            <div class="review-item">
+              <strong>Phone:</strong> {{applicationForm.phone}}
+            </div>
+            <div class="review-item">
+              <strong>Aadhaar:</strong> {{applicationForm.aadhaar}}
+            </div>
+            <div class="review-item">
+              <strong>Address:</strong> {{applicationForm.address}}, {{applicationForm.city}}, {{applicationForm.state}}
+              - {{applicationForm.pincode}}
+            </div>
+          </div>
+
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="applicationForm.agreeTerms" id="agreeTerms">
+            <label class="form-check-label" for="agreeTerms">
+              I hereby declare that the information provided is true and correct to the best of my knowledge.
+            </label>
+          </div>
+        </div>
+
+        <!-- Success Animation -->
+        <div *ngIf="showSuccessAnimation" class="success-animation text-center py-4">
+          <div class="success-icon">
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <h5 class="success-title">Application Submitted Successfully!</h5>
+          <p class="success-message">Your application for {{selectedScheme?.name || 'PMAY'}} has been submitted. You
+            will receive a confirmation email shortly.</p>
+          <button class="btn btn-primary" (click)="closeApplyModal()">Done</button>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer" *ngIf="!showSuccessAnimation">
+        <button type="button" class="btn btn-secondary" (click)="previousStep()" *ngIf="currentApplyStep > 1">
+          Previous
+        </button>
+        <button type="button" class="btn btn-primary" (click)="nextStep()" *ngIf="currentApplyStep < 3">
+          Next
+        </button>
+        <button type="button" class="btn btn-success" (click)="submitApplication()" *ngIf="currentApplyStep === 3"
+          [disabled]="!applicationForm.agreeTerms">
+          Submit Application
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Talk to Expert Modal -->
+<div #talkToExpertModal class="modal fade" id="talkToExpertModal" tabindex="-1" aria-labelledby="talkToExpertModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="talkToExpertModalLabel">Talk to Expert</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="expert-modal-content">
+          <p class="expert-subtitle">Get personalized guidance from government scheme experts</p>
+
+          <div class="expert-section">
+            <h6 class="section-title">Available Experts</h6>
+
+            <!-- Expert Card 1 -->
+            <div class="expert-card">
+              <div class="expert-header">
+                <div class="expert-info">
+                  <h6 class="expert-name">Rajesh Kumar</h6>
+                  <p class="expert-role">Senior Scheme Advisor</p>
+                </div>
+                <div class="expert-status available">
+                  <i class="bi bi-circle-fill"></i>
+                  Available Now
+                </div>
+              </div>
+
+              <div class="expert-meta">
+                <div class="rating">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-text">4.8</span>
+                  <span class="consultations">(1250 consultations)</span>
+                </div>
+                <div class="experience">12+ years experience</div>
+              </div>
+
+              <div class="expert-tags">
+                <span class="expert-tag">Housing</span>
+                <span class="expert-tag">PMAY</span>
+                <span class="expert-tag">Subsidies</span>
+              </div>
+
+              <div class="expert-languages">
+                <strong>Languages:</strong> Hindi, English
+              </div>
+
+              <div class="expert-actions">
+                <button class="expert-action-btn video-call" (click)="startVideoCall('Rajesh Kumar')">
+                  <i class="bi bi-camera-video"></i>
+                  Video Call
+                </button>
+                <button class="expert-action-btn chat" (click)="startChat('Rajesh Kumar')">
+                  <i class="bi bi-chat"></i>
+                  Chat
+                </button>
+                <button class="expert-action-btn schedule" (click)="scheduleCall('Rajesh Kumar')">
+                  <i class="bi bi-calendar"></i>
+                  Schedule
+                </button>
+              </div>
+
+              <div class="call-action">
+                <button class="call-btn" (click)="startVoiceCall('Rajesh Kumar')">
+                  <i class="bi bi-telephone-fill"></i>
+                  Call Now
+                </button>
+              </div>
+            </div>
+
+            <!-- Expert Card 2 -->
+            <div class="expert-card">
+              <div class="expert-header">
+                <div class="expert-info">
+                  <h6 class="expert-name">Priya Sharma</h6>
+                  <p class="expert-role">Agriculture Expert</p>
+                </div>
+                <div class="expert-status busy">
+                  <i class="bi bi-circle-fill"></i>
+                  Available in 15 mins
+                </div>
+              </div>
+
+              <div class="expert-meta">
+                <div class="rating">
+                  <span class="stars">★★★★★</span>
+                  <span class="rating-text">4.9</span>
+                  <span class="consultations">(980 consultations)</span>
+                </div>
+                <div class="experience">8+ years experience</div>
+              </div>
+
+              <div class="expert-tags">
+                <span class="expert-tag">Agriculture</span>
+                <span class="expert-tag">PM Kisan</span>
+                <span class="expert-tag">Subsidies</span>
+              </div>
+
+              <div class="expert-languages">
+                <strong>Languages:</strong> Hindi, English, Punjabi
+              </div>
+
+              <div class="expert-actions">
+                <button class="expert-action-btn video-call" (click)="startVideoCall('Priya Sharma')" [disabled]="true">
+                  <i class="bi bi-camera-video"></i>
+                  Video Call
+                </button>
+                <button class="expert-action-btn chat" (click)="startChat('Priya Sharma')">
+                  <i class="bi bi-chat"></i>
+                  Chat
+                </button>
+                <button class="expert-action-btn schedule" (click)="scheduleCall('Priya Sharma')">
+                  <i class="bi bi-calendar"></i>
+                  Schedule
+                </button>
+              </div>
+
+              <div class="call-action">
+                <button class="call-btn" (click)="startVoiceCall('Priya Sharma')" [disabled]="true">
+                  <i class="bi bi-telephone-fill"></i>
+                  Call Now
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="expert-footer">
+            <div class="free-service-badge">
+              <i class="bi bi-patch-check"></i>
+              100% Free Consultation Service
+            </div>
+            <p class="security-note">
+              All our experts are verified government scheme advisors. Your data is secure and confidential.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Call Modal -->
+<div #callModal class="modal fade" id="callModal" tabindex="-1" aria-labelledby="callModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content call-modal-content">
+      <div class="modal-body text-center p-4">
+        <!-- Loading Spinner for Call Connection -->
+        <div *ngIf="isConnectingCall" class="loading-overlay">
+          <div class="spinner-border text-light" role="status" style="width:3rem;height:3rem;border-width:0.2em;">
+            <span class="visually-hidden">Connecting...</span>
+          </div>
+          <p class="mt-3 mb-0 text-white">Connecting to {{ currentCallExpert }}...</p>
+        </div>
+
+        <!-- Call Connected UI -->
+        <div *ngIf="!isConnectingCall && callConnected">
+          <div class="call-avatar mb-3">
+            <i class="bi bi-person-circle" style="font-size: 3rem;"></i>
+          </div>
+          <h6 class="call-expert-name mb-2">{{ currentCallExpert }}</h6>
+          <p class="call-status mb-1">Connected</p>
+          <div class="call-timer mb-4">{{ callTimer }}</div>
+
+          <div class="call-actions d-flex justify-content-center gap-3">
+            <button class="call-action-btn mute-call" (click)="toggleMute()" [class.active]="isMuted">
+              <i class="bi bi-mic{{ isMuted ? '-mute' : '' }}"></i>
+            </button>
+            <button class="call-action-btn end-call" (click)="endCall()">
+              <i class="bi bi-telephone-x"></i>
+            </button>
+            <button class="call-action-btn speaker-call" (click)="toggleSpeaker()" [class.active]="isSpeakerOn">
+              <i class="bi bi-speaker{{ isSpeakerOn ? '-fill' : '' }}"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Calling UI (before connection) -->
+        <div *ngIf="!isConnectingCall && !callConnected">
+          <div class="call-avatar mb-3">
+            <i class="bi bi-person-circle" style="font-size: 3rem;"></i>
+          </div>
+          <h6 class="call-expert-name mb-2">{{ currentCallExpert }}</h6>
+          <p class="call-status mb-4">Calling...</p>
+
+          <div class="call-actions d-flex justify-content-center">
+            <button class="call-action-btn end-call" (click)="endCall()">
+              <i class="bi bi-telephone-x"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Video Call Modal -->
+<div #videoCallModal class="modal fade" id="videoCallModal" tabindex="-1" aria-labelledby="videoCallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content video-call-modal-content">
+      <div class="modal-body p-0 position-relative" style="min-height: 500px;">
+
+        <!-- Loading Spinner for Video Call Connection -->
+        <div *ngIf="isStartingVideoCall" class="video-call-loading-overlay">
+          <div class="loading-content text-center">
+            <div class="spinner-border text-light" role="status" style="width:4rem;height:4rem;border-width:0.3em;">
+              <span class="visually-hidden">Starting video call...</span>
+            </div>
+            <h5 class="mt-4 text-white">Starting Video Call</h5>
+            <p class="text-light">Connecting with {{ currentCallExpert }}...</p>
+          </div>
+        </div>
+
+        <!-- Video Call UI -->
+        <div *ngIf="!isStartingVideoCall" class="h-100 d-flex flex-column">
+
+          <!-- Video Call Header -->
+          <div class="video-call-header d-flex justify-content-between align-items-center p-3">
+            <div class="call-info d-flex align-items-center gap-3">
+              <div class="expert-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="expert-details">
+                <h6 class="expert-name mb-0">{{ currentCallExpert }}</h6>
+                <p class="expert-role mb-0">Senior Scheme Advisor</p>
+                <div class="call-status d-flex align-items-center gap-2 mt-1">
+                  <span class="status-dot"></span>
+                  <span class="status-text">Call Connected</span>
+                  <span class="call-timer">{{ videoCallTimer }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="call-actions-top d-flex gap-2">
+              <button class="call-action-btn" (click)="toggleVideo()" [class.active]="!isVideoOn">
+                <i class="bi bi-camera-video{{ isVideoOn ? '' : '-off' }}"></i>
+              </button>
+              <button class="call-action-btn" (click)="toggleMic()" [class.active]="isMuted">
+                <i class="bi bi-mic{{ isMuted ? '-mute' : '' }}"></i>
+              </button>
+              <button class="call-action-btn" (click)="toggleSpeaker()" [class.active]="isSpeakerOn">
+                <i class="bi bi-speaker{{ isSpeakerOn ? '-fill' : '' }}"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Video Call Body -->
+          <div class="video-call-body flex-grow-1 position-relative">
+
+            <!-- Expert Video (Main) -->
+            <div class="video-container expert-video position-absolute top-0 start-0 end-0 bottom-0 m-3">
+              <div class="video-placeholder w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                <i class="bi bi-person-video3" style="font-size: 4rem;"></i>
+                <p class="mt-2 mb-0">{{ currentCallExpert }}</p>
+              </div>
+            </div>
+
+            <!-- User Video (PIP) -->
+            <div class="video-container user-video position-absolute"
+              style="top: 20px; right: 20px; width: 200px; height: 150px;">
+              <div class="video-placeholder w-100 h-100 d-flex flex-column align-items-center justify-content-center">
+                <i class="bi bi-person-video2" style="font-size: 2rem;"></i>
+                <p class="mt-1 mb-0" style="font-size: 0.8rem;">You</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Video Call Controls -->
+          <div class="video-call-controls p-3">
+            <div class="control-group d-flex justify-content-center gap-3 mb-3">
+              <button class="control-btn d-flex flex-column align-items-center" (click)="toggleVideo()"
+                [class.active]="!isVideoOn">
+                <i class="bi bi-camera-video{{ isVideoOn ? '' : '-off' }} mb-1"></i>
+                <span style="font-size: 0.7rem;">{{ isVideoOn ? 'Stop Video' : 'Start Video' }}</span>
+              </button>
+
+              <button class="control-btn d-flex flex-column align-items-center" (click)="toggleMic()"
+                [class.active]="isMuted">
+                <i class="bi bi-mic{{ isMuted ? '-mute' : '' }} mb-1"></i>
+                <span style="font-size: 0.7rem;">{{ isMuted ? 'Unmute' : 'Mute' }}</span>
+              </button>
+
+              <button class="control-btn d-flex flex-column align-items-center" (click)="toggleSpeaker()"
+                [class.active]="isSpeakerOn">
+                <i class="bi bi-speaker{{ isSpeakerOn ? '-fill' : '' }} mb-1"></i>
+                <span style="font-size: 0.7rem;">{{ isSpeakerOn ? 'Speaker Off' : 'Speaker On' }}</span>
+              </button>
+
+              <button class="control-btn d-flex flex-column align-items-center">
+                <i class="bi bi-share mb-1"></i>
+                <span style="font-size: 0.7rem;">Share</span>
+              </button>
+
+              <button class="control-btn d-flex flex-column align-items-center" (click)="openChatDuringCall()">
+                <i class="bi bi-chat mb-1"></i>
+                <span style="font-size: 0.7rem;">Chat</span>
+              </button>
+            </div>
+
+            <div class="end-call-group d-flex justify-content-center">
+              <button class="end-call-btn d-flex align-items-center gap-2" (click)="endVideoCall()">
+                <i class="bi bi-telephone-x"></i>
+                <span>End Call</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Global Loading Overlay -->
+<div *ngIf="isLoading" class="global-loading">
+  <div class="global-loader"></div>
+  <div class="loading-text">{{ loadingAction || 'Loading...' }}</div>
+</div>

@@ -1,0 +1,9 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb ">
+    <ng-container *ngFor="let breadcrumb of this.breadcrumbs; let last = last">
+      <li class="breadcrumb-item" [class.active]="!last">{{
+        breadcrumb }}
+      </li>
+    </ng-container>
+  </ol>
+</nav>

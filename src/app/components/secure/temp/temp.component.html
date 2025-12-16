@@ -1,0 +1,31 @@
+<div class="container-fluid mt-3">
+  <div class="row">
+    <div class="col-md-12">
+      <h6>Badge Directive</h6>
+      <p class="badge" [appBadge]="4">dashboard works!</p>
+      <hr>
+
+      <h6>Highlight Directive</h6>
+      <p appHighlight>dashboard works!</p>
+
+      <hr>
+
+
+      <h6>Get Url Path CMD</h6>
+      <code>window.location.pathname</code>
+      <hr>
+
+      <h6>Allow English Only</h6>
+      <input appAllowEnglishOnly>
+      <hr>
+
+      <h6>Table</h6>
+      <div *ngIf="tableDataobj">
+        <app-table [receivedTableData]="tableDataobj" (actionObj)="getTableData($event)"></app-table>
+      </div>
+      <hr>
+    </div>
+  </div>
+</div>
+
+<!-- Ngx-Translate in Angular in Hindi -->

@@ -1,0 +1,1007 @@
+<div class="home-wrapper" [class.light-mode]="!isDarkMode">
+  <!-- Animated Background -->
+  <div class="bg-layer-1"></div>
+  <div class="bg-layer-2"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg fixed-top py-3" [class.navbar-light]="!isDarkMode"
+    [class.navbar-dark]="isDarkMode">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="assets/images/jansahayLogo.png" alt="JanSahay" height="40" class="me-2">
+        <span class="brand-text fw-bold fs-4">JanSahay</span>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Icon Navigation -->
+        <div class="nav-icons-container ms-auto">
+          <ul class="nav-icons-list">
+            <li [class.active]="activeTab === 'home'" (click)="setActiveTab('home')">
+              <i class="bi bi-house-door"></i>
+              <span class="title">Home</span>
+            </li>
+            <li [class.active]="activeTab === 'schemes'" (click)="setActiveTab('schemes')">
+              <i class="bi bi-file-earmark-text"></i>
+              <span class="title">Schemes</span>
+            </li>
+            <li [class.active]="activeTab === 'guide'" (click)="setActiveTab('guide')">
+              <i class="bi bi-question-circle"></i>
+              <span class="title">Guide</span>
+            </li>
+            <li [class.active]="activeTab === 'benefits'" (click)="setActiveTab('benefits')">
+              <i class="bi bi-graph-up"></i>
+              <span class="title">Benefits</span>
+            </li>
+            <li [class.active]="activeTab === 'pricing'" (click)="setActiveTab('pricing')">
+              <i class="bi bi-cash-stack"></i>
+              <span class="title">Pricing</span>
+            </li>
+            <li [class.active]="activeTab === 'contact'" (click)="setActiveTab('contact')">
+              <i class="bi bi-person-lines-fill"></i>
+              <span class="title">Contact</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button class="btn btn-icon ms-3" (click)="toggleTheme()">
+          <i class="bi" [class.bi-moon-fill]="isDarkMode" [class.bi-sun-fill]="!isDarkMode"></i>
+        </button>
+
+        <button class="btn btn-outline-primary ms-lg-3 px-4 py-2 fw-semibold" (click)="goToDashboard()"
+          [disabled]="isLoading">
+          <i class="bi bi-speedometer2 me-2"></i>
+          <span *ngIf="!isLoading">Dashboard</span>
+          <ngx-spinner *ngIf="isLoading" name="dashboardSpinner" size="small" type="ball-clip-rotate"
+            [fullScreen]="false"></ngx-spinner>
+        </button>
+
+        <button class="btn btn-primary ms-2 px-4 py-2 fw-semibold" (click)="goToChatbox()" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Get Started</span>
+          <ngx-spinner *ngIf="isLoading" name="homeSpinner" size="small" type="ball-clip-rotate"
+            [fullScreen]="false"></ngx-spinner>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+
+    <!-- HOME TAB -->
+    <div *ngIf="activeTab === 'home'" class="tab-content fade-in">
+      <!-- Hero Section -->
+      <section class="hero-section vh-100 d-flex align-items-center position-relative overflow-hidden">
+        <div class="container">
+          <div class="row align-items-center">
+            <!-- Left Content -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+              <div
+                class="badge bg-primary bg-opacity-10 text-primary fw-semibold px-3 py-2 rounded-pill d-inline-block mb-4">
+                Trusted by 50,000+ Citizens
+              </div>
+
+              <h1 class="display-4 fw-bold mb-4" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+                Your Gateway to
+                <span class="text-gradient">Government Schemes</span>
+              </h1>
+
+              <p class="lead mb-5 opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                Discover, understand, and apply for government benefits effortlessly.
+                JanSahay provides personalized recommendations and step-by-step guidance
+                to help you access the support you deserve.
+              </p>
+
+              <div class="d-flex flex-wrap gap-3 mb-5">
+                <button class="cssbuttons-io-button" (click)="goToChatbox()" [disabled]="isLoading">
+
+                  <span *ngIf="!isLoading">Start Free Assessment</span>
+
+                  <!-- Spinner -->
+                  <ngx-spinner *ngIf="isLoading" name="homeSpinner" size="small" type="ball-clip-rotate"
+                    [fullScreen]="false">
+                  </ngx-spinner>
+
+                  <div class="icon" *ngIf="!isLoading">
+                    <svg height="24" width="24" viewBox="0 0 24 24">
+                      <path d="M0 0h24v24H0z" fill="none"></path>
+                      <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                        fill="currentColor">
+                      </path>
+                    </svg>
+                  </div>
+                </button>
+                <button class="btn btn-outline-light btn-lg px-4 py-3" [class.btn-outline-dark]="!isDarkMode">
+                  <i class="bi bi-play-circle me-2"></i>
+                  Watch Demo
+                </button>
+              </div>
+
+              <!-- Animated Stats -->
+              <div class="row g-4 stats-container">
+                <div class="col-4">
+                  <div class="flip-card text-center" [class.animate-flip]="activeTab === 'home' && statsAnimated"
+                    [style.animation-delay]="'0s'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front" [class.bg-dark]="isDarkMode" [class.bg-white]="!isDarkMode">
+                        <h3 class="fw-bold mb-1" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">500+
+                        </h3>
+                      </div>
+                      <div class="flip-card-back" [class.bg-primary]="isDarkMode" [class.bg-light]="!isDarkMode">
+                        <h3 class="fw-bold mb-1 text-white">Schemes</h3>
+                      </div>
+                    </div>
+                    <p class="opacity-75 mb-0 mt-3" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                      Schemes</p>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="flip-card text-center" [class.animate-flip]="activeTab === 'home' && statsAnimated"
+                    [style.animation-delay]="'0.3s'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front" [class.bg-dark]="isDarkMode" [class.bg-white]="!isDarkMode">
+                        <h3 class="fw-bold mb-1" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">95%
+                        </h3>
+                      </div>
+                      <div class="flip-card-back" [class.bg-success]="isDarkMode"
+                        [class.bg-light-success]="!isDarkMode">
+                        <h3 class="fw-bold mb-1 text-white">Success</h3>
+                      </div>
+                    </div>
+                    <p class="opacity-75 mb-0 mt-3" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                      Success Rate</p>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="flip-card text-center" [class.animate-flip]="activeTab === 'home' && statsAnimated"
+                    [style.animation-delay]="'0.6s'">
+                    <div class="flip-card-inner">
+                      <div class="flip-card-front" [class.bg-dark]="isDarkMode" [class.bg-white]="!isDarkMode">
+                        <h3 class="fw-bold mb-1" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">24/7
+                        </h3>
+                      </div>
+                      <div class="flip-card-back" [class.bg-warning]="isDarkMode"
+                        [class.bg-light-warning]="!isDarkMode">
+                        <h3 class="fw-bold mb-1 text-white">AI Support</h3>
+                      </div>
+                    </div>
+                    <p class="opacity-75 mb-0 mt-3" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">AI
+                      Support</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Visual -->
+            <div class="col-lg-6 position-relative">
+              <div class="position-relative">
+                <!-- Floating Cards -->
+                <div
+                  class="floating-card card-1 position-absolute top-0 start-0 bg-opacity-50 border border-opacity-10 rounded-3 p-3"
+                  [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                  [class.border-dark]="!isDarkMode">
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="icon-wrapper bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                      style="width: 40px; height: 40px;">
+                      <i class="bi bi-check-lg text-white"></i>
+                    </div>
+                    <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Eligibility
+                      Check</span>
+                  </div>
+                </div>
+
+                <div
+                  class="floating-card card-2 position-absolute top-50 end-0 bg-opacity-50 border border-opacity-10 rounded-3 p-3"
+                  [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                  [class.border-dark]="!isDarkMode">
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="icon-wrapper bg-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                      style="width: 40px; height: 40px;">
+                      <i class="bi bi-file-text text-white"></i>
+                    </div>
+                    <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Document
+                      Guide</span>
+                  </div>
+                </div>
+
+                <div
+                  class="floating-card card-3 position-absolute bottom-0 start-0 bg-opacity-50 border border-opacity-10 rounded-3 p-3"
+                  [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                  [class.border-dark]="!isDarkMode">
+                  <div class="d-flex align-items-center">
+                    <div
+                      class="icon-wrapper bg-warning rounded-circle d-flex align-items-center justify-content-center me-3"
+                      style="width: 40px; height: 40px;">
+                      <i class="bi bi-lightning text-white"></i>
+                    </div>
+                    <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Quick
+                      Apply</span>
+                  </div>
+                </div>
+
+                <!-- Main Logo/Image -->
+                <div class="main-visual position-relative">
+                  <div class="visual-container position-relative">
+                    <img src="assets/images/jansahayLogo.png" alt="JanSahay Platform"
+                      class="img-fluid rounded-4 animate-float">
+                    <div class="glow-effect position-absolute top-50 start-50 translate-middle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="features-section py-6 py-lg-8">
+        <div class="container">
+          <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+              <h2 class="display-5 fw-bold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Why
+                Choose JanSahay</h2>
+              <p class="lead opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                Everything you need to access government benefits seamlessly
+              </p>
+            </div>
+          </div>
+
+          <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+              <div class="feature-card h-100 bg-opacity-25 border border-opacity-10 rounded-4 p-4"
+                [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                [class.border-dark]="!isDarkMode">
+                <div class="feature-icon-wrapper mb-4">
+                  <i class="bi bi-robot fs-1 text-primary"></i>
+                </div>
+                <h4 class="fw-bold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">AI-Powered
+                  Matching</h4>
+                <p class="opacity-75 mb-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  Smart algorithm finds the most suitable government schemes for your profile
+                </p>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <div class="feature-card h-100 bg-opacity-25 border border-opacity-10 rounded-4 p-4"
+                [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                [class.border-dark]="!isDarkMode">
+                <div class="feature-icon-wrapper mb-4">
+                  <i class="bi bi-files fs-1 text-success"></i>
+                </div>
+                <h4 class="fw-bold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Document
+                  Assistance</h4>
+                <p class="opacity-75 mb-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  Complete guidance for document preparation and verification process
+                </p>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <div class="feature-card h-100 bg-opacity-25 border border-opacity-10 rounded-4 p-4"
+                [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                [class.border-dark]="!isDarkMode">
+                <div class="feature-icon-wrapper mb-4">
+                  <i class="bi bi-bell fs-1 text-warning"></i>
+                </div>
+                <h4 class="fw-bold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Real-time
+                  Updates</h4>
+                <p class="opacity-75 mb-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  Stay informed with instant notifications about your application status
+                </p>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+              <div class="feature-card h-100 bg-opacity-25 border border-opacity-10 rounded-4 p-4"
+                [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                [class.border-dark]="!isDarkMode">
+                <div class="feature-icon-wrapper mb-4">
+                  <i class="bi bi-shield-check fs-1 text-info"></i>
+                </div>
+                <h4 class="fw-bold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Secure &
+                  Private</h4>
+                <p class="opacity-75 mb-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  Your data is protected with enterprise-grade security measures
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- SCHEMES TAB -->
+    <div *ngIf="activeTab === 'schemes'" class="tab-content fade-in pt-5 mt-5">
+      <div class="container py-5">
+        <h2 class="display-5 fw-bold mb-4 text-center" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+          Explore Schemes
+        </h2>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-4" *ngFor="let scheme of schemes">
+            <div class="card h-100 border-0 scheme-card" [class.bg-dark]="isDarkMode" [class.bg-white]="!isDarkMode"
+              [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+              <div class="card-body p-4">
+                <div class="icon-box mb-3 rounded-circle d-flex align-items-center justify-content-center"
+                  [class]="'bg-' + scheme.color + ' bg-opacity-10 text-' + scheme.color"
+                  style="width: 60px; height: 60px;">
+                  <i class="bi {{scheme.icon}} fs-3"></i>
+                </div>
+                <span class="badge mb-2" [class]="'bg-' + scheme.color">{{scheme.category}}</span>
+                <h4 class="card-title fw-bold mb-2">{{scheme.title}}</h4>
+                <p class="card-text opacity-75">{{scheme.description}}</p>
+                <button class="btn btn-sm mt-3" [class]="'btn-outline-' + scheme.color" (click)="goToChatbox()">
+                  Check Eligibility
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIDE TAB -->
+    <div *ngIf="activeTab === 'guide'" class="tab-content fade-in pt-5 mt-5">
+      <div class="container py-5">
+        <h2 class="display-5 fw-bold mb-5 text-center" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+          How It Works
+        </h2>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="timeline">
+              <div class="timeline-item d-flex gap-4 mb-5" *ngFor="let step of guideSteps; let i = index"
+                [class.step-visible]="guideStepsVisible[i]">
+                <div class="timeline-marker d-flex flex-column align-items-center">
+                  <div
+                    class="circle rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold fs-4"
+                    style="width: 60px; height: 60px; z-index: 2;">
+                    {{i + 1}}
+                  </div>
+                  <div class="line bg-primary bg-opacity-25 h-100" style="width: 2px; min-height: 50px;"
+                    *ngIf="i !== guideSteps.length - 1"></div>
+                </div>
+                <div class="timeline-content pt-2">
+                  <h4 class="fw-bold mb-2" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+                    {{step.title}}</h4>
+                  <p class="lead opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                    {{step.desc}}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Animated Progress Indicator -->
+            <div class="progress-indicator mt-5">
+              <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
+                <div class="step-dot" [class.active]="guideStepsVisible[0]"></div>
+                <div class="step-line" [class.active]="guideStepsVisible[1]"></div>
+                <div class="step-dot" [class.active]="guideStepsVisible[1]"></div>
+                <div class="step-line" [class.active]="guideStepsVisible[2]"></div>
+                <div class="step-dot" [class.active]="guideStepsVisible[2]"></div>
+                <div class="step-line" [class.active]="guideStepsVisible[3]"></div>
+                <div class="step-dot" [class.active]="guideStepsVisible[3]"></div>
+              </div>
+              <p class="text-center opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                Step {{visibleStepsCount}} of {{guideSteps.length}}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BENEFITS TAB -->
+    <div *ngIf="activeTab === 'benefits'" class="tab-content fade-in pt-5 mt-5">
+      <div class="container py-5">
+        <h2 class="display-5 fw-bold mb-5 text-center" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+          Benefits of JanSahay
+        </h2>
+        <div class="row g-4">
+          <div class="col-md-6" *ngFor="let benefit of benefits">
+            <div class="d-flex align-items-start p-4 rounded-4 h-100" [class.bg-white]="!isDarkMode"
+              [class.bg-dark]="isDarkMode" [class.border]="isDarkMode" [class.border-secondary]="isDarkMode">
+              <div class="icon-wrapper me-4 text-primary">
+                <i class="bi {{benefit.icon}} display-5"></i>
+              </div>
+              <div>
+                <h4 class="fw-bold mb-2" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+                  {{benefit.title}}</h4>
+                <p class="mb-0 opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  {{benefit.desc}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING TAB -->
+    <div *ngIf="activeTab === 'pricing'" class="tab-content fade-in pt-5 mt-5">
+      <div class="container py-5">
+        <!-- Section Header -->
+        <div class="row justify-content-center mb-5">
+          <div class="col-lg-10 text-center">
+            <div class="pricing-badge mb-4">
+              <i class="bi bi-lightning-charge-fill me-2"></i>
+              Limited Time Offer - Save Up to 38%
+            </div>
+            <h2 class="display-4 fw-bold mb-4" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+              Simple, Transparent Pricing
+            </h2>
+            <p class="lead mb-4 opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+              Choose the perfect plan for your needs. All plans include 14-day free trial.
+            </p>
+            <!-- Trust Indicators -->
+            <div class="trust-indicators d-flex flex-wrap justify-content-center gap-4 mt-4">
+              <div class="trust-item">
+                <i class="bi bi-shield-check text-success me-2"></i>
+                <span>SSL Secured</span>
+              </div>
+              <div class="trust-item">
+                <i class="bi bi-credit-card text-primary me-2"></i>
+                <span>No Credit Card Required</span>
+              </div>
+              <div class="trust-item">
+                <i class="bi bi-arrow-repeat text-info me-2"></i>
+                <span>Cancel Anytime</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Pricing Cards -->
+        <div class="row g-4 justify-content-center mb-5">
+          <div class="col-lg-4 col-md-6" *ngFor="let plan of pricingPlans; let i = index"
+            [style.animation-delay]="i * 0.15 + 's'">
+            <div class="pricing-card-enhanced h-100" [class.popular-plan]="plan.popular">
+
+              <!-- Savings Badge -->
+              <div class="savings-badge" *ngIf="plan.savings">
+                {{plan.savings}}
+              </div>
+
+              <!-- Popular Ribbon -->
+              <div class="popular-ribbon" *ngIf="plan.popular">
+                <i class="bi bi-star-fill me-1"></i>
+                <span>MOST POPULAR</span>
+              </div>
+
+              <!-- Plan Icon -->
+              <div class="plan-icon-wrapper">
+                <div class="plan-icon" [style.background]="plan.gradient">
+                  <i class="bi {{plan.icon}}"></i>
+                </div>
+              </div>
+
+              <!-- Plan Header -->
+              <div class="plan-header text-center">
+                <h3 class="plan-name mb-2">{{plan.name}}</h3>
+                <p class="plan-desc mb-4">{{plan.description}}</p>
+
+                <!-- Pricing -->
+                <div class="pricing-wrapper">
+                  <div class="original-price" *ngIf="plan.originalPrice">
+                    <span class="text-decoration-line-through">{{plan.originalPrice}}</span>
+                  </div>
+                  <div class="current-price">
+                    <span class="price-amount">{{plan.price}}</span>
+                    <span class="price-period" *ngIf="plan.period">{{plan.period}}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Plan Features -->
+              <div class="plan-features">
+                <ul class="features-list-enhanced">
+                  <li *ngFor="let feature of plan.features" class="feature-item-enhanced">
+                    <div class="feature-check" [style.background]="plan.gradient">
+                      <i class="bi bi-check2"></i>
+                    </div>
+                    <span>{{feature}}</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- CTA Button -->
+              <div class="plan-cta">
+                <button class="btn-plan-select w-100" [style.background]="plan.gradient"
+                  (click)="plan.name === 'Enterprise' ? setActiveTab('contact') : goToChatbox()">
+                  {{plan.buttonText}}
+                  <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+                <p class="cta-note mt-3 mb-0 text-center">
+                  <small *ngIf="plan.name !== 'Enterprise'">
+                    <i class="bi bi-clock-history me-1"></i>
+                    14-day free trial included
+                  </small>
+                  <small *ngIf="plan.name === 'Enterprise'">
+                    <i class="bi bi-telephone me-1"></i>
+                    Get custom quote
+                  </small>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Money Back Guarantee -->
+        <div class="row mb-5">
+          <div class="col-12">
+            <div class="guarantee-card text-center">
+              <div class="guarantee-icon mb-3">
+                <i class="bi bi-shield-fill-check"></i>
+              </div>
+              <h4 class="fw-bold mb-2">30-Day Money-Back Guarantee</h4>
+              <p class="mb-0 opacity-75">
+                Not satisfied? Get a full refund within 30 days, no questions asked.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Testimonials -->
+        <div class="row mb-5">
+          <div class="col-12">
+            <h3 class="text-center fw-bold mb-5" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+              Trusted by Thousands of Happy Customers
+            </h3>
+            <div class="row g-4">
+              <div class="col-lg-4 col-md-6" *ngFor="let testimonial of testimonials; let i = index"
+                [style.animation-delay]="i * 0.1 + 's'">
+                <div class="testimonial-card h-100">
+                  <div class="testimonial-header mb-3">
+                    <div class="d-flex align-items-center">
+                      <img [src]="testimonial.image" [alt]="testimonial.name" class="testimonial-avatar">
+                      <div class="ms-3">
+                        <h5 class="mb-0 fw-bold">{{testimonial.name}}</h5>
+                        <p class="mb-0 small opacity-75">{{testimonial.role}}</p>
+                        <p class="mb-0 small opacity-50">{{testimonial.company}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="testimonial-rating mb-3">
+                    <i class="bi bi-star-fill text-warning" *ngFor="let star of [1,2,3,4,5]"></i>
+                  </div>
+                  <p class="testimonial-text mb-3">
+                    "{{testimonial.text}}"
+                  </p>
+                  <div class="testimonial-plan">
+                    <span class="badge bg-primary bg-opacity-10 text-primary">
+                      {{testimonial.plan}} Plan
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="row mt-5 pt-5">
+          <div class="col-lg-8 mx-auto">
+            <h3 class="text-center fw-bold mb-5" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+              Frequently Asked Questions
+            </h3>
+            <div class="accordion accordion-flush" id="pricingFAQ">
+              <div class="accordion-item-enhanced mb-3">
+                <h2 class="accordion-header">
+                  <button class="accordion-button-enhanced collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq1">
+                    <i class="bi bi-question-circle me-3"></i>
+                    Can I switch plans later?
+                  </button>
+                </h2>
+                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                  <div class="accordion-body-enhanced">
+                    Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll
+                    prorate the charges accordingly.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item-enhanced mb-3">
+                <h2 class="accordion-header">
+                  <button class="accordion-button-enhanced collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq2">
+                    <i class="bi bi-credit-card me-3"></i>
+                    What payment methods do you accept?
+                  </button>
+                </h2>
+                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                  <div class="accordion-body-enhanced">
+                    We accept all major credit cards (Visa, MasterCard, American Express), debit cards, UPI, net
+                    banking, and popular digital wallets like Paytm, PhonePe, and Google Pay.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item-enhanced mb-3">
+                <h2 class="accordion-header">
+                  <button class="accordion-button-enhanced collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq3">
+                    <i class="bi bi-gift me-3"></i>
+                    Is there a free trial?
+                  </button>
+                </h2>
+                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                  <div class="accordion-body-enhanced">
+                    Yes! All plans include a 14-day free trial. No credit card required to start. You can explore all
+                    features risk-free before committing.
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item-enhanced mb-3">
+                <h2 class="accordion-header">
+                  <button class="accordion-button-enhanced collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq4">
+                    <i class="bi bi-headset me-3"></i>
+                    What kind of support do you offer?
+                  </button>
+                </h2>
+                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#pricingFAQ">
+                  <div class="accordion-body-enhanced">
+                    Basic plan includes email support (24-48hr response). Professional plan gets priority email & chat
+                    support. Enterprise plan includes 24/7 phone support with dedicated account manager.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Still Have Questions CTA -->
+        <div class="row mt-5">
+          <div class="col-12 text-center">
+            <div class="questions-cta">
+              <h4 class="fw-bold mb-3">Still have questions?</h4>
+              <p class="mb-4 opacity-75">Our team is here to help you choose the right plan</p>
+              <button class="btn btn-outline-primary btn-lg px-5" (click)="setActiveTab('contact')">
+                <i class="bi bi-chat-dots me-2"></i>
+                Contact Sales Team
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT TAB -->
+    <div *ngIf="activeTab === 'contact'" class="tab-content fade-in pt-5 mt-5">
+      <div class="container py-5">
+        <!-- Section Header -->
+        <div class="row justify-content-center mb-5">
+          <div class="col-lg-8 text-center">
+            <div class="contact-badge mb-4">
+              <i class="bi bi-headset me-2"></i>
+              24/7 Support Available
+            </div>
+            <h2 class="display-4 fw-bold mb-4" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+              Get in Touch
+            </h2>
+            <p class="lead mb-0 opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+              Have questions? We're here to help. Reach out to our team and we'll get back to you within 24 hours.
+            </p>
+          </div>
+        </div>
+
+        <!-- Contact Info Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-lg-4 col-md-6">
+            <div class="contact-info-card h-100 d-flex flex-column">
+              <div class="contact-icon-wrapper mb-4">
+                <div class="contact-icon bg-primary">
+                  <i class="bi bi-geo-alt-fill"></i>
+                </div>
+              </div>
+              <h5 class="fw-bold mb-3 text-center">Visit Us</h5>
+              <p class="mb-0 opacity-75 text-center flex-grow-1">
+                123 Government Complex<br>
+                Connaught Place<br>
+                New Delhi - 110001
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6">
+            <div class="contact-info-card h-100 d-flex flex-column">
+              <div class="contact-icon-wrapper mb-4">
+                <div class="contact-icon bg-success">
+                  <i class="bi bi-envelope-fill"></i>
+                </div>
+              </div>
+              <h5 class="fw-bold mb-3 text-center">Email Us</h5>
+              <div class="flex-grow-1">
+                <p class="mb-2 opacity-75 text-center">
+                  General Inquiries:<br>
+                  <a href="mailto:support@jansahay.gov.in" class="text-decoration-none">support@jansahay.gov.in</a>
+                </p>
+                <p class="mb-0 opacity-75 text-center">
+                  Sales:<br>
+                  <a href="mailto:sales@jansahay.gov.in" class="text-decoration-none">sales@jansahay.gov.in</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6">
+            <div class="contact-info-card h-100 d-flex flex-column">
+              <div class="contact-icon-wrapper mb-4">
+                <div class="contact-icon bg-warning">
+                  <i class="bi bi-telephone-fill"></i>
+                </div>
+              </div>
+              <h5 class="fw-bold mb-3 text-center">Call Us</h5>
+              <div class="flex-grow-1">
+                <p class="mb-2 opacity-75 text-center">
+                  Toll-Free:<br>
+                  <a href="tel:18001234567" class="text-decoration-none fw-semibold">1800-123-4567</a>
+                </p>
+                <p class="mb-0 opacity-75 text-center">
+                  International:<br>
+                  <a href="tel:+911123456789" class="text-decoration-none">+91 11 2345 6789</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form and Additional Info -->
+        <div class="row g-4">
+          <!-- Contact Form -->
+          <div class="col-lg-12">
+            <div class="contact-form-card">
+              <h3 class="fw-bold mb-4">Send us a Message</h3>
+              <form>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Full Name *</label>
+                    <input type="text" class="form-control-enhanced" placeholder="John Doe" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Email Address *</label>
+                    <input type="email" class="form-control-enhanced" placeholder="john@example.com" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Phone Number</label>
+                    <input type="tel" class="form-control-enhanced" placeholder="+91 98765 43210">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-semibold">Subject *</label>
+                    <select class="form-control-enhanced" required>
+                      <option value="">Select a topic</option>
+                      <option value="general">General Inquiry</option>
+                      <option value="support">Technical Support</option>
+                      <option value="sales">Sales Question</option>
+                      <option value="feedback">Feedback</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label fw-semibold">Message *</label>
+                    <textarea class="form-control-enhanced" rows="5" placeholder="Tell us how we can help you..."
+                      required></textarea>
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="btn-contact-submit w-100">
+                      <i class="bi bi-send-fill me-2"></i>
+                      Send Message
+                    </button>
+                    <p class="text-center mt-3 mb-0 small opacity-75">
+                      <i class="bi bi-shield-check me-1"></i>
+                      Your information is secure and will never be shared
+                    </p>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Additional Info Sidebar -->
+          <div class="row mt-4">
+            <!-- Office Hours -->
+            <div class="col-lg-6 col-md-12">
+              <div class="contact-sidebar-card mb-4">
+                <h5 class="fw-bold mb-3">
+                  <i class="bi bi-clock-fill me-2 text-primary"></i>
+                  Office Hours
+                </h5>
+                <div class="office-hours">
+                  <div class="office-hour-item d-flex justify-content-between">
+                    <span class="day">Monday - Friday</span>
+                    <span class="time">9:00 AM - 6:00 PM</span>
+                  </div>
+                  <div class="office-hour-item d-flex justify-content-between">
+                    <span class="day">Saturday</span>
+                    <span class="time">10:00 AM - 4:00 PM</span>
+                  </div>
+                  <div class="office-hour-item d-flex justify-content-between">
+                    <span class="day">Sunday</span>
+                    <span class="time">Closed</span>
+                  </div>
+                </div>
+
+                <div class="alert alert-info mt-3 mb-0">
+                  <i class="bi bi-info-circle me-2"></i>
+                  <small>Emergency support available 24/7 for Enterprise customers</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-6 col-md-12">
+              <div class="contact-sidebar-card mb-4">
+                <h5 class="fw-bold mb-3">
+                  <i class="bi bi-link-45deg me-2 text-warning"></i>
+                  Quick Links
+                </h5>
+                <div class="quick-links d-flex flex-column">
+                  <a href="#" class="quick-link-item mb-2">
+                    <i class="bi bi-file-text me-2"></i> Documentation
+                  </a>
+                  <a href="#" class="quick-link-item mb-2">
+                    <i class="bi bi-question-circle me-2"></i> FAQ
+                  </a>
+                  <a href="#" class="quick-link-item mb-2">
+                    <i class="bi bi-life-preserver me-2"></i> Support Center
+                  </a>
+                  <a href="#" class="quick-link-item">
+                    <i class="bi bi-chat-dots me-2"></i> Live Chat
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Links -->
+          <div class="row mt-3">
+            <div class="col-lg-12">
+              <div class="contact-sidebar-card">
+                <h5 class="fw-bold mb-3">
+                  <i class="bi bi-share-fill me-2 text-success"></i>
+                  Follow Us
+                </h5>
+                <div class="social-links d-flex gap-3 flex-wrap">
+                  <a href="#" class="social-link facebook"><i class="bi bi-facebook"></i></a>
+                  <a href="#" class="social-link twitter"><i class="bi bi-twitter"></i></a>
+                  <a href="#" class="social-link linkedin"><i class="bi bi-linkedin"></i></a>
+                  <a href="#" class="social-link instagram"><i class="bi bi-instagram"></i></a>
+                  <a href="#" class="social-link youtube"><i class="bi bi-youtube"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- CTA Section (Visible on all tabs) -->
+  <section class="cta-section py-6 py-lg-8">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="cta-card bg-gradient-primary border-0 rounded-4 p-5 p-lg-6">
+            <div class="row align-items-center">
+              <div class="col-lg-8 mb-4 mb-lg-0">
+                <h2 class="display-6 fw-bold text-white mb-3">
+                  Ready to Access Government Benefits?
+                </h2>
+                <p class="lead text-white opacity-90 mb-0">
+                  Join thousands of citizens who have successfully applied through JanSahay
+                </p>
+              </div>
+              <div class="col-lg-4 text-lg-end">
+                <button class="btn btn-light btn-lg px-5 py-3 fw-bold" (click)="goToChatbox()" [disabled]="isLoading">
+                  <span *ngIf="!isLoading">Get Started Now</span>
+                  <ngx-spinner *ngIf="isLoading" name="homeSpinner" size="small" type="ball-clip-rotate"
+                    [fullScreen]="false"></ngx-spinner>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer py-5" [class.bg-dark]="isDarkMode" [class.bg-light]="!isDarkMode">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-4 mb-4 mb-lg-0">
+          <div class="d-flex align-items-center mb-3">
+            <img src="assets/images/jansahayLogo.png" alt="JanSahay" height="40" class="me-3">
+            <span class="fs-3 fw-bold" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">JanSahay</span>
+          </div>
+          <p class="opacity-75 mb-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+            Making government schemes accessible to all citizens
+          </p>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="col-6 col-md-3 mb-3">
+              <h6 class="fw-semibold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Quick Links
+              </h6>
+              <ul class="list-unstyled">
+                <li class="mb-2"><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Home</a></li>
+                <li class="mb-2"><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Schemes</a></li>
+                <li class="mb-2"><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">How it Works</a></li>
+                <li><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Contact</a></li>
+              </ul>
+            </div>
+
+            <div class="col-6 col-md-3 mb-3">
+              <h6 class="fw-semibold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Legal</h6>
+              <ul class="list-unstyled">
+                <li class="mb-2"><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Privacy Policy</a></li>
+                <li class="mb-2"><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Terms of Service</a></li>
+                <li><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Cookie Policy</a></li>
+              </ul>
+            </div>
+
+            <div class="col-6 col-md-3 mb-3">
+              <h6 class="fw-semibold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Support</h6>
+              <ul class="list-unstyled">
+                <li class="mb-2"><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Help Center</a></li>
+                <li class="mb-2"><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">Contact Us</a></li>
+                <li><a href="#" class="opacity-75 text-decoration-none" [class.text-light]="isDarkMode"
+                    [class.text-muted]="!isDarkMode">FAQ</a></li>
+              </ul>
+            </div>
+
+            <div class="col-6 col-md-3 mb-3">
+              <h6 class="fw-semibold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Connect</h6>
+              <div class="d-flex gap-3">
+                <a href="#" class="opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  <i class="bi bi-twitter fs-5"></i>
+                </a>
+                <a href="#" class="opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  <i class="bi bi-facebook fs-5"></i>
+                </a>
+                <a href="#" class="opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  <i class="bi bi-linkedin fs-5"></i>
+                </a>
+                <a href="#" class="opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+                  <i class="bi bi-instagram fs-5"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="border-opacity-10 my-4" [class.border-white]="isDarkMode" [class.border-dark]="!isDarkMode">
+
+      <div class="row">
+        <div class="col-md-6">
+          <p class="opacity-75 mb-3 mb-md-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+            © 2024 JanSahay. All rights reserved.
+          </p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="opacity-75 mb-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
+            Empowering citizens through accessible governance
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

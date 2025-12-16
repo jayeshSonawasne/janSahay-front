@@ -1,0 +1,235 @@
+<!-- add "mini" class to sidebar class for mini sidebar -->
+<nav id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <a href="#" target="_blank">
+      <img src="assets/images/Logo.png" />
+      <span class="logo-name">ABC Infotech</span>
+    </a>
+  </div>
+
+  <div class="sidebar-menu scrollbar">
+    <ul class="menu">
+      <ng-container *ngFor="let list of this.pageListModels; let i = index">
+        <ng-container *ngFor="let sub of list?.subModules">
+          <li class="menu-item" *ngIf="sub?.names?.length == 1 && list?.subModules?.length == 1">
+            <a routerLink="{{sub.names[0].url}}" routerLinkActive="active" class="menu-link"
+              (click)="toggleMenuExpansion(i, true)">
+              <div class="icon-wrapper"><img src="assets/images/sidebar-icons/student-list.svg"></div>
+              <span>{{list.mainMenu}}</span>
+            </a>
+          </li>
+
+          <li class="menu-item"
+            *ngIf="sub?.names && sub.names.length > 1 && list?.subModules && list.subModules.length == 1">
+            <a class="menu-link" data-bs-toggle="collapse" routerLinkActive="active" href="#mainMenu{{i}}" role="button"
+              [class.collapsed]="!list.collapsed" [attr.aria-expanded]="list.collapsed ? true : false"
+              [attr.aria-controls]="'mainMenu'+i" [attr.data-bs-target]="'#mainMenu'+i"
+              (click)="toggleMenuExpansion(i, true)" [class.active]="list.collapsed ? true : false">
+              <div class="icon-wrapper"><img src="assets/images/sidebar-icons/masters.svg"></div>
+              <span>{{list.mainMenu}}</span>
+              <span class="dropdown-toggle ms-auto"></span>
+            </a>
+            <ul class="submenu" [class]="list.collapsed ? 'show accordion-collapse collapse':'collapse'"
+              id="mainMenu{{i}}">
+              <ng-container *ngFor="let name of sub?.names">
+                <li class="submenu-item" *ngIf="name?.isSideBar">
+                  <a routerLink="{{name?.url}}" routerLinkActive="active" class="submenu-link">
+                    <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+                    {{name?.name}}
+                  </a>
+                </li>
+              </ng-container>
+            </ul>
+          </li>
+        </ng-container>
+
+        <li class="menu-item" *ngIf="list?.subModules && list.subModules.length > 1">
+          <a class="menu-link" data-bs-toggle="collapse" href="#subMenus{{i}}" role="button"
+            (click)="toggleMenuExpansion(i, true)" [attr.data-bs-target]="'#subMenus'+i"
+            [attr.aria-controls]="'subMenus'+i" [attr.aria-expanded]="list.collapsed ? true : false"
+            [class.active]="list.collapsed ? true : false">
+            <div class="icon-wrapper"><img src="assets/images/sidebar-icons/reports.svg"></div>
+            <span>{{list.mainMenu}}</span>
+            <span class="dropdown-toggle ms-auto"></span>
+          </a>
+          <ul class="submenu" [class]="list.collapsed ? 'show accordion-collapse collapse':'collapse'"
+            id="subMenus{{i}}">
+            <ng-container *ngFor="let sub of list?.subModules; let j = index">
+              <ng-container *ngFor="let name of sub?.names">
+                <li class="submenu-item" *ngIf="name?.isSideBar && sub?.names?.length == 1">
+                  <a routerLink="{{name?.url}}" routerLinkActive="active" class="submenu-link"
+                    (click)="toggleMenuExpansion(i, false, j)">
+                    <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+                    {{name?.name}}
+                  </a>
+                </li>
+              </ng-container>
+              <li class="submenu-item" *ngIf="sub?.names && sub.names.length > 1">
+                <a href="#" class="submenu-link" data-bs-toggle="collapse" href="#submenuItem{{j}}" role="button"
+                  [attr.aria-expanded]="sub.collapsed ? true : false" [attr.aria-controls]="'submenuItem'+j"
+                  (click)="toggleMenuExpansion(i, false, j)">
+                  <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon"
+                    [class.active]="sub.collapsed ? true : false">
+                  {{sub.subMenu}}
+                  <span class="dropdown-toggle ms-auto"></span>
+                </a>
+
+                <ul class="subsubmenu" id="submenuItem{{j}}"
+                  [class]="sub.collapsed ? 'show accordion-collapse collapse':'collapse'">
+                  <ng-container *ngFor="let subMenus of sub.names">
+                    <li class="subsubmenu-item">
+                      <a class="subsubmenu-link" routerLinkActive="active" routerLink="{{subMenus?.url}}"
+                        (click)="toggleMenuExpansion(i, false, j)">
+                        <img src="assets/images/sidebar-icons/subsubmenu-bullet.svg" class="subsubmenu-icon">
+                        {{subMenus?.name}}
+                      </a>
+                    </li>
+                  </ng-container>
+                </ul>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</nav>
+
+<!-- add "mini" class to sidebar class for mini sidebar
+<nav id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <a href="#" target="_blank">
+      <img src="assets/images/logo.svg" />
+      <span class="logo-name">ABC Infotech</span>
+    </a>
+  </div>
+
+  <div class="sidebar-menu scrollbar">
+    <ul class="menu">
+      <li class="menu-item">
+        <a href="#" class="menu-link" data-bs-toggle="collapse" href="#collapseDashboard" role="button"
+          aria-expanded="false" aria-controls="collapseDashboard">
+          <div class="icon-wrapper"><img src="assets/images/sidebar-icons/dashboard.svg"></div>
+          <span>Dashboard</span>
+          <span class="dropdown-toggle ms-auto"></span>
+        </a>
+        <ul class="collapse submenu" id="collapseDashboard">
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Dashboard 1
+            </a>
+          </li>
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Dashboard 2
+            </a>
+          </li>
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Dashboard 3
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link">
+          <div class="icon-wrapper"><img src="assets/images/sidebar-icons/student-list.svg"></div>
+          <span>Students List</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link" data-bs-toggle="collapse" href="#collapseMasters" role="button"
+          aria-expanded="false" aria-controls="collapseMasters">
+          <div class="icon-wrapper"><img src="assets/images/sidebar-icons/masters.svg"></div>
+          <span>Masters</span>
+          <span class="dropdown-toggle ms-auto"></span>
+        </a>
+        <ul class="collapse submenu" id="collapseMasters">
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Masters 1
+            </a>
+          </li>
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Masters 2
+            </a>
+          </li>
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Masters 3
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link">
+          <div class="icon-wrapper"><img src="assets/images/sidebar-icons/portfolio.svg"></div>
+          <span>Portfolio</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link">
+          <div class="icon-wrapper"><img src="assets/images/sidebar-icons/contact.svg"></div>
+          <span>Contact Us</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="#" class="menu-link" data-bs-toggle="collapse" href="#collapseReports" role="button"
+          aria-expanded="false" aria-controls="collapseReports">
+          <div class="icon-wrapper"><img src="assets/images/sidebar-icons/reports.svg"></div>
+          <span>Reports</span>
+          <span class="dropdown-toggle ms-auto"></span>
+        </a>
+        <ul class="collapse submenu" id="collapseReports">
+          <li class="submenu-item">
+            <a href="#" class="submenu-link" data-bs-toggle="collapse" href="#collapseExample" role="button"
+              aria-expanded="false" aria-controls="collapseExample">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Reports 1
+              <span class="dropdown-toggle ms-auto"></span>
+            </a>
+            <ul class="collapse subsubmenu" id="collapseExample">
+              <li class="subsubmenu-item">
+                <a class="subsubmenu-link" href="#">
+                  <img src="assets/images/sidebar-icons/subsubmenu-bullet.svg" class="subsubmenu-icon">
+                  Reports 1.1
+                </a>
+              </li>
+              <li class="subsubmenu-item">
+                <a class="subsubmenu-link" href="#">
+                  <img src="assets/images/sidebar-icons/subsubmenu-bullet.svg" class="subsubmenu-icon">
+                  Reports 1.2
+                </a>
+              </li>
+              <li class="subsubmenu-item">
+                <a class="subsubmenu-link" href="#">
+                  <img src="assets/images/sidebar-icons/subsubmenu-bullet.svg" class="subsubmenu-icon">
+                  Reports 1.3
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Reports 2
+            </a>
+          </li>
+          <li class="submenu-item">
+            <a href="#" class="submenu-link">
+              <img src="assets/images/sidebar-icons/submenu-bullet.svg" class="submenu-icon">
+              Reports 3
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav> -->

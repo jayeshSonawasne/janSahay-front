@@ -1,0 +1,576 @@
+<div class="dashboard-layout">
+    <!-- Left Sidebar -->
+    <aside class="dashboard-sidebar" [class.collapsed]="isSidebarCollapsed" [class.open]="isMobileSidebarOpen">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/images/jansahayLogo.png" alt="JanSahay" class="logo-icon" style="object-fit: contain;">
+                <span class="logo-text" *ngIf="!isSidebarCollapsed">JanSahay</span>
+            </div>
+            <button class="toggle-btn" (click)="toggleSidebar()">
+                <i class="bi" [class.bi-list]="isSidebarCollapsed" [class.bi-chevron-left]="!isSidebarCollapsed"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a (click)="setActiveTab('dashboard')" [class.active]="activeTab === 'dashboard'" class="nav-item"
+                title="Dashboard">
+                <i class="bi bi-speedometer2"></i>
+                <span *ngIf="!isSidebarCollapsed">Dashboard</span>
+            </a>
+            <a (click)="setActiveTab('applications')" [class.active]="activeTab === 'applications'" class="nav-item"
+                title="Applications">
+                <i class="bi bi-file-earmark-text"></i>
+                <span *ngIf="!isSidebarCollapsed">Applications</span>
+            </a>
+            <a (click)="setActiveTab('schemes')" [class.active]="activeTab === 'schemes'" class="nav-item"
+                title="Schemes">
+                <i class="bi bi-clipboard-check"></i>
+                <span *ngIf="!isSidebarCollapsed">Schemes</span>
+            </a>
+            <a (click)="setActiveTab('analytics')" [class.active]="activeTab === 'analytics'" class="nav-item"
+                title="Analytics">
+                <i class="bi bi-graph-up-arrow"></i>
+                <span *ngIf="!isSidebarCollapsed">Analytics</span>
+            </a>
+            <a (click)="setActiveTab('reports')" [class.active]="activeTab === 'reports'" class="nav-item"
+                title="Reports">
+                <i class="bi bi-file-bar-graph"></i>
+                <span *ngIf="!isSidebarCollapsed">Reports</span>
+            </a>
+            <a (click)="setActiveTab('messages')" [class.active]="activeTab === 'messages'" class="nav-item"
+                title="Messages">
+                <i class="bi bi-chat-dots"></i>
+                <span *ngIf="!isSidebarCollapsed">Messages</span>
+            </a>
+            <a (click)="setActiveTab('settings')" [class.active]="activeTab === 'settings'" class="nav-item"
+                title="Settings">
+                <i class="bi bi-gear"></i>
+                <span *ngIf="!isSidebarCollapsed">Settings</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="dashboard-main" [class.expanded]="isSidebarCollapsed">
+
+        <!-- Dashboard Tab -->
+        <!-- Dashboard Tab -->
+        <div *ngIf="activeTab === 'dashboard'" class="modern-dashboard">
+            <!-- Mobile Overlay -->
+            <div class="sidebar-overlay" [class.show]="isMobileSidebarOpen" (click)="toggleMobileSidebar()"></div>
+            <!-- Dashboard Header -->
+            <div class="dashboard-header">
+                <div class="header-content mb-2">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                        <button class="mobile-toggle-btn d-lg-none" (click)="toggleMobileSidebar()">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <div>
+                            <h1 class="dashboard-title">Dashboard</h1>
+                            <p class="dashboard-subtitle">Government Scheme Management System</p>
+                        </div>
+                        <div class="header-actions">
+                            <button mat-raised-button color="primary">
+                                <i class="bi bi-file-earmark-arrow-down-fill me-2"></i>
+                                Export Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stat Cards -->
+                <div class="stat-cards-grid gap-2">
+                    <div class="stat-card" *ngFor="let card of statCards" [style.background]="card.bgColor">
+                        <div class="stat-card-content">
+                            <div class="stat-info">
+                                <div class="stat-icon-wrapper">
+                                    <i [class]="'bi ' + card.icon" class="stat-icon" style="font-size: 2rem;"></i>
+                                </div>
+                                <div class="stat-details">
+                                    <h3 class="stat-value">{{card.value}}</h3>
+                                    <p class="stat-title">{{card.title}}</p>
+                                </div>
+                            </div>
+                            <div class="stat-change" [class.positive]="card.changeType === 'up'"
+                                [class.negative]="card.changeType === 'down'">
+                                <i class="bi" [class.bi-graph-up-arrow]="card.changeType === 'up'"
+                                    [class.bi-graph-down-arrow]="card.changeType === 'down'"></i>
+                                <span>{{card.change}}</span>
+                                <small>from last month</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="charts-row gap-2">
+                    <!-- Application Trends Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Application Trends</h3>
+                                <p class="chart-subtitle">Monthly application statistics</p>
+                            </div>
+                            <button mat-icon-button>
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
+                        <div class="chart-container">
+                            <apx-chart [series]="applicationTrendsChart.series!" [chart]="applicationTrendsChart.chart!"
+                                [xaxis]="applicationTrendsChart.xaxis!" [yaxis]="applicationTrendsChart.yaxis!"
+                                [stroke]="applicationTrendsChart.stroke!" [fill]="applicationTrendsChart.fill!"
+                                [dataLabels]="applicationTrendsChart.dataLabels!" [grid]="applicationTrendsChart.grid!"
+                                [colors]="applicationTrendsChart.colors!" [tooltip]="applicationTrendsChart.tooltip!">
+                            </apx-chart>
+                        </div>
+                    </div>
+
+                    <!-- Scheme Performance Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Scheme Performance</h3>
+                                <p class="chart-subtitle">Performance by category</p>
+                            </div>
+                            <button mat-icon-button>
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
+                        <div class="chart-container">
+                            <apx-chart [series]="schemePerformanceChart.series!" [chart]="schemePerformanceChart.chart!"
+                                [xaxis]="schemePerformanceChart.xaxis!" [yaxis]="schemePerformanceChart.yaxis!"
+                                [plotOptions]="schemePerformanceChart.plotOptions!"
+                                [dataLabels]="schemePerformanceChart.dataLabels!" [grid]="schemePerformanceChart.grid!"
+                                [colors]="schemePerformanceChart.colors!">
+                            </apx-chart>
+                        </div>
+                    </div>
+
+                    <!-- Target vs Achievement Chart -->
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Target vs Achievement</h3>
+                                <p class="chart-subtitle">Monthly comparison</p>
+                            </div>
+                            <button mat-icon-button>
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
+                        <div class="chart-container">
+                            <apx-chart [series]="targetVsAchievementChart.series!"
+                                [chart]="targetVsAchievementChart.chart!" [xaxis]="targetVsAchievementChart.xaxis!"
+                                [yaxis]="targetVsAchievementChart.yaxis!"
+                                [plotOptions]="targetVsAchievementChart.plotOptions!"
+                                [dataLabels]="targetVsAchievementChart.dataLabels!"
+                                [grid]="targetVsAchievementChart.grid!" [colors]="targetVsAchievementChart.colors!"
+                                [legend]="targetVsAchievementChart.legend!">
+                            </apx-chart>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Section -->
+                <div class="data-row gap-2">
+                    <!-- Top Performing Schemes Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div>
+                                <h3 class="table-title">Top Performing Schemes</h3>
+                                <p class="table-subtitle">Based on application volume and success rate</p>
+                            </div>
+                            <div class="custom-search-field">
+                                <i class="bi bi-search search-icon"></i>
+                                <input type="text" (keyup)="applyFilter($event)" placeholder="Search schemes..."
+                                    class="search-input">
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table mat-table [dataSource]="topSchemesDataSource" matSort class="modern-table">
+                                <!-- Rank Column -->
+                                <ng-container matColumnDef="rank">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rank</th>
+                                    <td mat-cell *matCellDef="let scheme">
+                                        <div class="rank-badge">{{scheme.rank}}</div>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Name Column -->
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Scheme Name</th>
+                                    <td mat-cell *matCellDef="let scheme">
+                                        <div class="scheme-name">{{scheme.name}}</div>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Category Column -->
+                                <ng-container matColumnDef="category">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+                                    <td mat-cell *matCellDef="let scheme">
+                                        <span class="category-badge">{{scheme.category}}</span>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Applications Column -->
+                                <ng-container matColumnDef="applications">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Applications</th>
+                                    <td mat-cell *matCellDef="let scheme">
+                                        <strong>{{scheme.applications | number}}</strong>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Success Rate Column -->
+                                <ng-container matColumnDef="successRate">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Success Rate</th>
+                                    <td mat-cell *matCellDef="let scheme">
+                                        <div class="progress-cell">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" [style.width.%]="scheme.successRate">
+                                                </div>
+                                            </div>
+                                            <span class="progress-text">{{scheme.successRate}}%</span>
+                                        </div>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Budget Column -->
+                                <ng-container matColumnDef="budget">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Budget</th>
+                                    <td mat-cell *matCellDef="let scheme">
+                                        <strong class="budget-amount">{{scheme.budget}}</strong>
+                                    </td>
+                                </ng-container>
+
+                                <!-- Status Column -->
+                                <ng-container matColumnDef="status">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                    <td mat-cell *matCellDef="let scheme">
+                                        <span class="status-badge" [ngClass]="getStatusClass(scheme.status)">
+                                            {{scheme.status | titlecase}}
+                                        </span>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+                            </table>
+                        </div>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                    </div>
+
+                    <!-- State Distribution Chart -->
+                    <div class="chart-card state-chart">
+                        <div class="chart-header">
+                            <div>
+                                <h3 class="chart-title">Applications by State</h3>
+                                <p class="chart-subtitle">Top 10 states</p>
+                            </div>
+                            <button mat-icon-button>
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                        </div>
+                        <div class="chart-container">
+                            <apx-chart [series]="stateDistributionChart.series!" [chart]="stateDistributionChart.chart!"
+                                [xaxis]="stateDistributionChart.xaxis!" [yaxis]="stateDistributionChart.yaxis!"
+                                [plotOptions]="stateDistributionChart.plotOptions!"
+                                [dataLabels]="stateDistributionChart.dataLabels!" [grid]="stateDistributionChart.grid!"
+                                [colors]="stateDistributionChart.colors!">
+                            </apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schemes Tab Content -->
+        <div *ngIf="activeTab === 'schemes'" class="modern-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Schemes Management</h1>
+                <p class="dashboard-subtitle">Active government schemes available for application</p>
+            </div>
+
+            <!-- Schemes Grid -->
+            <div class="schemes-grid gap-2"
+                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; padding-bottom: 2rem;">
+                <div class="scheme-card" *ngFor="let scheme of schemesList"
+                    style="background: white; border-radius: 1rem; padding: 1.5rem;  transition: transform 0.2s;">
+                    <div class="scheme-header"
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div class="scheme-icon" [style.background]="scheme.color + '20'"
+                            style="width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi {{scheme.icon}}" [style.color]="scheme.color" style="font-size: 24px;"></i>
+                        </div>
+                        <span class="badge" [style.background]="scheme.color + '20'" [style.color]="scheme.color"
+                            style="padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.75rem;">{{scheme.category}}</span>
+                    </div>
+                    <h3 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 0.5rem; color: #1f2937;">
+                        {{scheme.title}}</h3>
+                    <div class="scheme-details"
+                        style="display: flex; gap: 1rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: #6b7280;">
+                        <span><i class="bi bi-cash-stack me-1"></i> {{scheme.funding}}</span>
+                        <span><i class="bi bi-clock me-1"></i> {{scheme.deadline}}</span>
+                    </div>
+                    <div class="scheme-actions" style="display: flex; gap: 0.75rem;">
+                        <button mat-stroked-button color="primary" style="flex: 1;">Details</button>
+                        <button mat-raised-button color="primary" style="flex: 1;">Apply Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab Content -->
+        <div *ngIf="activeTab === 'analytics'" class="modern-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Analytics Overview</h1>
+                <p class="dashboard-subtitle">Deep dive into application metrics and performance</p>
+            </div>
+
+            <div class="charts-row gap-2">
+                <div class="chart-card" style="flex: 1;">
+                    <div class="chart-header">
+                        <h3 class="chart-title">User Demographics</h3>
+                        <p class="chart-subtitle">Applications by age group</p>
+                    </div>
+                    <div
+                        style="height: 300px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 8px;">
+                        <!-- Placeholder for a new chart, or reuse existing -->
+                        <apx-chart [series]="schemePerformanceChart.series!" [chart]="schemePerformanceChart.chart!"
+                            [xaxis]="schemePerformanceChart.xaxis!" [yaxis]="schemePerformanceChart.yaxis!"
+                            [plotOptions]="schemePerformanceChart.plotOptions!"
+                            [dataLabels]="schemePerformanceChart.dataLabels!" [grid]="schemePerformanceChart.grid!"
+                            [colors]="schemePerformanceChart.colors!">
+                        </apx-chart>
+                    </div>
+                </div>
+                <div class="chart-card" style="flex: 1;">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Fund Utilization</h3>
+                        <p class="chart-subtitle">Disbursed vs Allocated</p>
+                    </div>
+                    <div
+                        style="height: 300px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border-radius: 8px;">
+                        <apx-chart [series]="targetVsAchievementChart.series!" [chart]="targetVsAchievementChart.chart!"
+                            [xaxis]="targetVsAchievementChart.xaxis!" [yaxis]="targetVsAchievementChart.yaxis!"
+                            [plotOptions]="targetVsAchievementChart.plotOptions!"
+                            [dataLabels]="targetVsAchievementChart.dataLabels!" [grid]="targetVsAchievementChart.grid!"
+                            [colors]="targetVsAchievementChart.colors!" [legend]="targetVsAchievementChart.legend!">
+                        </apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab Content -->
+        <div *ngIf="activeTab === 'reports'" class="modern-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Reports Center</h1>
+                <p class="dashboard-subtitle">Access and download system reports</p>
+            </div>
+
+            <div class="report-list" style="background: white; border-radius: 1rem; overflow: hidden; ">
+                <div *ngFor="let report of reportsList" class="report-item">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="file-icon"
+                            [ngClass]="{'pdf': report.type === 'PDF', 'excel': report.type === 'Excel', 'csv': report.type === 'CSV'}"
+                            style="width: 48px; height: 48px; border-radius: 8px; background: #f1f5f9; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi" [class.bi-file-earmark-pdf-fill]="report.type === 'PDF'"
+                                [class.bi-file-earmark-excel-fill]="report.type === 'Excel'"
+                                [class.bi-file-earmark-spreadsheet-fill]="report.type === 'CSV'"
+                                style="font-size: 24px;"
+                                [style.color]="report.type === 'PDF' ? '#ef4444' : report.type === 'Excel' ? '#10b981' : '#f59e0b'"></i>
+                        </div>
+                        <div>
+                            <h4 style="margin: 0; font-size: 1rem; font-weight: 600; color: #1f2937;">
+                                {{report.name}}
+                            </h4>
+                            <p style="margin: 0.25rem 0 0; font-size: 0.875rem; color: #6b7280;">{{report.date}} •
+                                {{report.size}}</p>
+                        </div>
+                    </div>
+                    <button mat-icon-button color="primary">
+                        <i class="bi bi-download"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Tab Content -->
+        <div *ngIf="activeTab === 'messages'" class="modern-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Messages</h1>
+                <p class="dashboard-subtitle">Recent communications</p>
+            </div>
+
+            <div class="messages-container">
+                <!-- Side List -->
+                <div class="message-list">
+                    <div class="list-header" style="padding: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                        <input type="text" placeholder="Search messages..."
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; background: #f9fafb;">
+                    </div>
+                    <div class="list-items">
+                        <div *ngFor="let msg of messagesList" class="message-item" [class.unread]="msg.unread">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                <h4 style="font-weight: 600; font-size: 0.9375rem; margin: 0; color: #1f2937;">
+                                    {{msg.sender}}</h4>
+                                <span style="font-size: 0.75rem; color: #6b7280;">{{msg.time}}</span>
+                            </div>
+                            <p style="margin: 0; font-size: 0.875rem; color: #4b5563; font-weight: 500;">
+                                {{msg.subject}}
+                            </p>
+                            <p
+                                style="margin: 0.25rem 0 0; font-size: 0.8125rem; color: #9ca3af; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
+                                {{msg.summary}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- View Area -->
+                <div class="message-view"
+                    style="flex: 1; display: flex; align-items: center; justify-content: center; background: #f8fafc;">
+                    <div class="empty-state" style="text-align: center;">
+                        <i class="bi bi-chat-square-text"
+                            style="font-size: 48px; color: #cbd5e1; margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto;"></i>
+                        <p style="color: #64748b; font-size: 1.125rem;">Select a message to read</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab Content -->
+        <div *ngIf="activeTab === 'settings'" class="modern-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Settings</h1>
+                <p class="dashboard-subtitle">Configure your dashboard preferences</p>
+            </div>
+            <div class="settings-container" style="max-width: 800px;">
+                <div class="card p-4 mb-4" style="background: white; border-radius: 1rem; border: none; ">
+                    <h3
+                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
+                        Profile Settings</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Full Name</label>
+                            <input type="text" class="form-control" value="Siddhesh G" style="padding: 0.75rem;">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Email Address</label>
+                            <input type="email" class="form-control" value="siddhesh@example.com"
+                                style="padding: 0.75rem;">
+                        </div>
+                        <div class="col-12 mt-3">
+                            <label class="form-label text-muted small fw-bold">Role</label>
+                            <input type="text" class="form-control" value="District Administrator" disabled
+                                style="padding: 0.75rem; background: #f3f4f6;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-4" style="background: white; border-radius: 1rem; border: none; ">
+                    <h3
+                        style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #e5e7eb;">
+                        Preferences</h3>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="mb-1" style="font-size: 1rem; font-weight: 600;">Email Notifications</h5>
+                            <p class="text-muted small mb-0">Receive daily summaries and alerts</p>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" checked style="width: 3em; height: 1.5em;">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h5 class="mb-1" style="font-size: 1rem; font-weight: 600;">Dark Mode</h5>
+                            <p class="text-muted small mb-0">Switch to dark theme</p>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" style="width: 3em; height: 1.5em;">
+                        </div>
+                    </div>
+                    <button mat-raised-button color="primary" class="mt-2">Values Updated</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications Tab Content -->
+        <div *ngIf="activeTab === 'applications'" class="modern-dashboard">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Applications</h1>
+                <p class="dashboard-subtitle">Manage and track application status</p>
+            </div>
+
+            <div class="table-card p-0" style="overflow: hidden;">
+                <div class="table-container">
+                    <table class="w-100" style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                            <tr>
+                                <th
+                                    style="padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">
+                                    ID</th>
+                                <th
+                                    style="padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">
+                                    Applicant</th>
+                                <th
+                                    style="padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">
+                                    Scheme</th>
+                                <th
+                                    style="padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">
+                                    Date</th>
+                                <th
+                                    style="padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">
+                                    Status</th>
+                                <th
+                                    style="padding: 1rem 1.5rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">
+                                    Progress</th>
+                                <th
+                                    style="padding: 1rem 1.5rem; text-align: right; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase;">
+                                    Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let app of applicationsList" class="app-row">
+                                <td style="padding: 1rem 1.5rem; font-weight: 600; color: #334155;">{{app.id}}</td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <div
+                                            style="width: 32px; height: 32px; background: #e0e7ff; color: #6366f1; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem;">
+                                            {{app.applicant.charAt(0)}}</div>
+                                        <span style="font-weight: 500; color: #1e293b;">{{app.applicant}}</span>
+                                    </div>
+                                </td>
+                                <td style="padding: 1rem 1.5rem; color: #475569;">{{app.scheme}}</td>
+                                <td style="padding: 1rem 1.5rem; color: #64748b; font-size: 0.875rem;">{{app.date}}
+                                </td>
+                                <td style="padding: 1rem 1.5rem;">
+                                    <span
+                                        [ngClass]="{'bg-green-100 text-green-700': app.status === 'Approved', 'bg-yellow-100 text-yellow-700': app.status === 'Pending' || app.status === 'In Review', 'bg-red-100 text-red-700': app.status === 'Rejected'}"
+                                        style="padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; display: inline-block;"
+                                        [style.background]="app.status === 'Approved' ? '#dcfce7' : app.status === 'Rejected' ? '#fee2e2' : '#fef9c3'"
+                                        [style.color]="app.status === 'Approved' ? '#166534' : app.status === 'Rejected' ? '#991b1b' : '#854d0e'">
+                                        {{app.status}}
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem 1.5rem; width: 150px;">
+                                    <div
+                                        style="height: 6px; width: 100%; background: #e2e8f0; border-radius: 3px; overflow: hidden;">
+                                        <div [style.width.%]="app.progress"
+                                            [style.background]="app.progress === 100 ? '#10b981' : '#6366f1'"
+                                            style="height: 100%; border-radius: 3px;"></div>
+                                    </div>
+                                </td>
+                                <td style="padding: 1rem 1.5rem; text-align: right;">
+                                    <button mat-icon-button color="primary">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+```

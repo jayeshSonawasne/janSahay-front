@@ -1,0 +1,69 @@
+<div class="table-responsive scrollbar">
+    <table mat-table matSort [dataSource]="this.receivedTableData?.tableData">
+        <ng-container *ngFor="let column of receivedTableData?.displayedColumns; let i = index" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>
+                <p class="text-capitalize-first">{{receivedTableData?.tableHeaders[i]}}</p>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row; let k=index">
+                <ng-container *ngFor="let col  of receivedTableData?.modifiedCol; let m = index">
+                    <ng-container *ngIf="col.key == column">
+
+                        <!-- Link -->
+                        <ng-container *ngIf="col.transformFor == 'link'">
+                            <a [routerLink]="col.url">{{row[column]}}</a>
+                        </ng-container>
+
+                        <!-- Badge -->
+                        <ng-container *ngIf="col.transformFor == 'badge'">
+                            <span class="badge" [appBadge]="row.statusId">{{row[column]}}</span>
+                        </ng-container>
+
+                        <!-- Toggle -->
+                        <ng-container *ngIf="col.transformFor == 'toggle'">
+                            <mat-slide-toggle (change)="action($event, 'toggle')"></mat-slide-toggle>
+                        </ng-container>
+
+                        <!-- Date And  Date With Time -->
+                        <ng-container *ngIf="col.transformFor == 'date' || col.transformFor == 'dateWithTime'">
+                            {{column == 'date' && row[column] ? (row[column] | date :'dd-MM-yyyy'): column ==
+                            'dateWithTime'
+                            && row[column] ? (row[column] | date :'dd-MM-yyyy hh:mm a') :'-'}}
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
+                <div *ngIf="!receivedTableData?.modifiedKeyData()?.includes(column)">
+                    <span>
+                        {{column == 'srno' ? (((receivedTableData?.tableOptions[1] + 1) * 10 + k + 1)-20) :
+                        row[column] ? row[column] : column != 'action' ?
+                        this.commonMethodService.dataType(row[column]):''}}
+                    </span>
+                    <!-- Actions -->
+                    <ng-container *ngIf="column == 'action'">
+                        <ng-container *ngFor="let actions of receivedTableData?.actions">
+                            <button mat-flat-button class="btn-icon btn-action ms-1" 
+                            [matTooltip]="actions?.action"  [class]="actions.class" (click)="action(row, actions.action,k)" *ngIf="actions.action" [disabled]="!actions?.isdisable">
+                           <span class="material-symbols-rounded ">
+                               {{actions.icon}} {{actions.name}} 
+                           </span>
+                       </button> 
+                    </ng-container>
+                    </ng-container>
+
+                </div>
+            </mat-cell>
+        </ng-container>
+        <tr class="mat-row p-2 w-100" *matNoDataRow col>
+            <td [attr.colspan]="receivedTableData.displayedColumns.length">
+                <div class="alert alert-danger text-center m-2 p-2">
+                    Data not available
+                </div>
+            </td>
+        </tr>
+        <mat-header-row *matHeaderRowDef="receivedTableData?.displayedColumns;sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: receivedTableData?.displayedColumns let s = index" [class.bg-light]="highlightedRow == s"></mat-row>
+    </table>
+</div>
+
+<mat-paginator *ngIf="receivedTableData?.tableOptions[0]" showFirstLastButtons
+    [length]="receivedTableData?.tableOptions[2]" [pageSizeOptions]="[receivedTableData?.tableOptions[3]]"
+    (page)="action($event, 'pagination')"></mat-paginator>

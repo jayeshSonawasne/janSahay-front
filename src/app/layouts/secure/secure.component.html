@@ -1,0 +1,16 @@
+<!-- add "mini" class to wrapper class for mini sidebar -->
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <app-sidebar></app-sidebar>
+    <!-- Page Content  -->
+    <div id="content" class="">
+        <app-header></app-header>
+        <div class="main-content">
+            <router-outlet></router-outlet>
+        </div>
+        <footer>
+            <app-footer></app-footer>
+        </footer>
+    </div>
+    <div class="overlay"></div>
+</div>

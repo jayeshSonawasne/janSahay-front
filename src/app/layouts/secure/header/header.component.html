@@ -1,0 +1,95 @@
+<nav class="navbar navbar-expand-lg border-bottom">
+    <div class="container-fluid ps-0">
+        <div class="d-flex w-100" id="navbarSupportedContent">
+            <div class="d-flex gap-2 align-items-center">
+                <button mat-flat-button class="btn-icon bg-secondary-subtle">
+                    <mat-icon class="material-symbols-rounded">
+                        menu
+                    </mat-icon>
+                </button>
+                <div class="d-none d-lg-block">
+                    <app-breadcrumb></app-breadcrumb>
+                </div>
+            </div>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <div class="dropdown">
+                    <button type="button" class="btn-language" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span>{{this.language}}</span>
+                        <span class="dropdown-toggle"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li>
+                            <a class="dropdown-item" (click)="selectLanguage('English')"
+                                [class.active]="this.language == 'English'">
+                                <img src="assets/images/english.svg">
+                                {{'header.english' | translate}}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" (click)="selectLanguage('Marathi')"
+                                [class.active]="this.language == 'Marathi'">
+                                <img src="assets/images/marathi.svg">
+                                {{'header.marathi' | translate}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <button mat-flat-button class="btn-icon bg-secondary-subtle">
+                    <mat-icon class="material-symbols-rounded">
+                        notifications
+                    </mat-icon>
+                </button>
+                <div class="dropdown">
+                    <button class="btn shadow-none p-0 border-0" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="d-flex gap-2 align-items-center">
+                            <img src="assets/images/user.png" class="avatar">
+                            <div class="text-start d-none d-lg-block">
+                                <div class="name">Avinash Kambale</div>
+                                <div class="desi">Administrator</div>
+                            </div>
+                            <span class="dropdown-toggle"></span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton1">
+                        <li>
+                            <span class="dropdown-item-text mb-1">
+                                <div class="text-start d-block d-lg-none">
+                                    <div class="name">Avinash Kambale</div>
+                                    <div class="desi">Administrator</div>
+                                </div>
+                            </span>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <mat-icon class="material-symbols-rounded">
+                                    account_circle
+                                </mat-icon>
+                                My Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <mat-icon class="material-symbols-rounded">
+                                    lock
+                                </mat-icon>
+                                Change Password
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <mat-icon class="material-symbols-rounded">
+                                    logout
+                                </mat-icon>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
