@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private scrollObserver!: IntersectionObserver;
 
   // UI State
-  activeTab: 'home' | 'schemes' | 'guide' | 'benefits' | 'pricing' | 'contact' = 'home';
+  activeTab: 'home' | 'schemes' | 'guide' | 'benefits' | 'team' | 'contact' = 'home';
   isDarkMode = true; // Default to dark mode for premium feel
 
   // Guide Animation State
@@ -24,75 +24,88 @@ export class HomeComponent implements OnInit, OnDestroy {
   // Stats Animation State
   statsAnimated = false;
 
-  // Pricing Plans Data
-  pricingPlans = [
+  // Team Members Data
+  // Team Members Data
+  teamMembers = [
     {
-      name: 'Basic',
-      price: '₹999',
-      period: '/month',
-      originalPrice: '₹1,499',
-      savings: 'Save 33%',
-      description: 'Perfect for individuals and small teams',
-      features: [
-        'Access to AI Chatbot',
-        'Basic Dashboard Analytics',
-        'Up to 50 Applications/month',
-        'Email Support',
-        'Standard Processing Time',
-        'Mobile App Access'
-      ],
-      color: 'primary',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      popular: false,
-      buttonText: 'Get Started',
-      icon: 'bi-rocket-takeoff'
+      name: 'Ravindra Salunkhe',
+      role: 'Team Owner & Lead',
+      expertise: ['Project Leadership', 'Strategic Planning', 'Management'],
+      image: 'https://ui-avatars.com/api/?name=Ravindra+Salunkhe&background=6366f1&color=fff&size=256',
+      isLead: true,
+      social: { linkedin: '#', twitter: '#' }
     },
     {
-      name: 'Professional',
-      price: '₹2,499',
-      period: '/month',
-      originalPrice: '₹3,999',
-      savings: 'Save 38%',
-      description: 'Best for growing businesses',
-      features: [
-        'Everything in Basic',
-        'Advanced Analytics & Reports',
-        'Unlimited Applications',
-        'Priority Email & Chat Support',
-        'Fast-Track Processing',
-        'API Access',
-        'Custom Integrations',
-        'Dedicated Account Manager'
-      ],
-      color: 'success',
-      gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-      popular: true,
-      buttonText: 'Start Free Trial',
-      icon: 'bi-stars'
+      name: 'Amar Gaikwad',
+      role: 'Team Owner & Lead and Designer',
+      expertise: ['UI/UX Design', 'Product Strategy', 'Creative Direction'],
+      image: 'https://ui-avatars.com/api/?name=Amar+Gaikwad&background=8b5cf6&color=fff&size=256',
+      isLead: true,
+      social: { linkedin: '#', twitter: '#' }
     },
     {
-      name: 'Enterprise',
-      price: 'Custom',
-      period: '',
-      originalPrice: '',
-      savings: 'Best Value',
-      description: 'For large organizations with custom needs',
-      features: [
-        'Everything in Professional',
-        'White-Label Solution',
-        'Custom Workflows',
-        'Advanced Security & Compliance',
-        'On-Premise Deployment Option',
-        '24/7 Phone Support',
-        'Training & Onboarding',
-        'SLA Guarantee',
-        'Custom Development'
-      ],
-      color: 'warning',
-      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-      popular: false,
-      buttonText: 'Contact Sales',
-      icon: 'bi-building'
+      name: 'Kiran Mane',
+      role: 'Sr. Mobile Application Developer',
+      expertise: ['Mobile Architecture', 'Performance Optimization', 'App Security'],
+      image: 'https://ui-avatars.com/api/?name=Kiran+Mane&background=ec4899&color=fff&size=256',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
+    },
+    {
+      name: 'Uddhav Bade',
+      role: 'Sr. Mobile Application Developer',
+      expertise: ['Native Development', 'Cross-Platform', 'API Integration'],
+      image: 'https://ui-avatars.com/api/?name=Uddhav+Bade&background=f43f5e&color=fff&size=256',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
+    },
+    {
+      name: 'Jayesh Sonawane',
+      role: 'Software Developer',
+      expertise: ['Full Stack Development', 'Angular', 'Node.js'],
+      image: 'assets/images/Jayesh_Sonawane.png',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
+    },
+    {
+      name: 'Shrutika Mapari',
+      role: 'Software Developer',
+      expertise: ['Frontend Architecture', 'Web Technologies', 'Problem Solving'],
+      image: 'assets/images/Shrutika_Mapari.png',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
+    },
+    {
+      name: 'Siddhesh Gophane',
+      role: 'UI Developer',
+      expertise: ['Responsive Design', 'HTML5/SCSS', 'Animations'],
+      image: 'https://ui-avatars.com/api/?name=Siddhesh+Gophane&background=f59e0b&color=fff&size=256',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
+    },
+    {
+      name: 'Tejas Phalke',
+      role: 'Jr. Business Analyst',
+      expertise: ['Requirement Analysis', 'Agile Methodology', 'Documentation'],
+      image: 'https://ui-avatars.com/api/?name=Tejas+Phalke&background=3b82f6&color=fff&size=256',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
+    },
+    {
+      name: 'Ajinkya Mali',
+      role: 'Jr. AI/ML Engineer',
+      expertise: ['Machine Learning', 'NLP', 'Data Science'],
+      image: 'https://ui-avatars.com/api/?name=Ajinkya+Mali&background=8b5cf6&color=fff&size=256',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
+    },
+    {
+      name: 'Saurabh Khedkar',
+      role: 'Quality Assurance Engineer',
+      expertise: ['Automation Testing', 'Quality Control', 'Bug Tracking'],
+      image: 'https://ui-avatars.com/api/?name=Saurabh+Khedkar&background=64748b&color=fff&size=256',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#' }
     }
   ];
 
@@ -260,7 +273,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  setActiveTab(tab: 'home' | 'schemes' | 'guide' | 'benefits' | 'pricing' | 'contact') {
+  setActiveTab(tab: 'home' | 'schemes' | 'guide' | 'benefits' | 'team' | 'contact') {
     this.activeTab = tab;
 
     // Reset guide animations when switching to guide tab

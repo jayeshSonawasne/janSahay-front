@@ -284,6 +284,7 @@ $stars-lg: box-shadow(100);
 
 .brand-text {
   background: var(--gradient);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -462,6 +463,7 @@ $stars-lg: box-shadow(100);
 
 .text-gradient {
   background: var(--gradient);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
@@ -2335,5 +2337,106 @@ textarea.form-control-enhanced {
 
   .social-links {
     justify-content: center;
+  }
+
+}
+
+/* ===== TEAM SECTION ===== */
+.team-card {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  &.card-dark-mode {
+    border-color: rgba(255, 255, 255, 0.05);
+    background: rgba(15, 23, 42, 0.6);
+  }
+
+  &.lead-card {
+    border-color: rgba(234, 179, 8, 0.4);
+
+    .blob {
+      background: radial-gradient(circle, rgba(234, 179, 8, 0.4) 0%, transparent 70%);
+    }
+
+    .avatar-ring {
+      border-color: rgba(234, 179, 8, 0.5);
+    }
+
+    &:hover {
+      border-color: rgba(234, 179, 8, 0.8);
+      box-shadow: 0 20px 25px -5px rgba(234, 179, 8, 0.1), 0 10px 10px -5px rgba(234, 179, 8, 0.04);
+    }
+  }
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: rgba(59, 130, 246, 0.3);
+
+    .blob {
+      transform: translate(-50%, -50%) scale(1.5);
+      opacity: 0.6;
+    }
+
+    .avatar-ring {
+      transform: rotate(180deg) scale(1.1);
+      border-color: var(--primary);
+    }
+  }
+}
+
+.blob {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  filter: blur(40px);
+  opacity: 0.3;
+  transition: all 0.5s ease;
+  z-index: 0;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  padding: 5px;
+}
+
+.avatar-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  transition: all 0.5s ease;
+}
+
+.team-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+.social-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  &:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-3px);
   }
 }
