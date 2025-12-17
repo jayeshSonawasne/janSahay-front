@@ -1,135 +1,105 @@
-<div class="otp-wrapper">
-  <!-- Animated Background with Floating Shapes -->
-  <div class="background-animation">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
+<div class="login-wrapper">
+  <!-- LEFT PANEL: Branding & Visuals -->
+  <div class="left-panel">
+    <!-- Animated Background Elements -->
+    <div class="shapes-container">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+
+    <div class="brand-content">
+      <div class="logo-circle">
+        <img src="assets/images/jansahayLogo.png" alt="JanSehay Logo" class="brand-logo" />
+      </div>
+      <h1 class="brand-title">जनसहाय</h1>
+      <p class="brand-subtitle">Empowering Citizens with<br>Government Welfare Services</p>
+
+      <div class="feature-pills">
+        <div class="pill">
+          <span class="check-icon">✓</span> Fast
+        </div>
+        <div class="pill">
+          <span class="check-icon">✓</span> Secure
+        </div>
+        <div class="pill">
+          <span class="check-icon">✓</span> Reliable
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Main Login Card -->
-  <div class="otp-card glass-effect" [@cardAnimation]>
+  <!-- RIGHT PANEL: Login Form -->
+  <div class="right-panel">
+    <div class="form-container" [@cardAnimation]>
 
-    <!-- Logo & Branding -->
-    <div class="brand-section">
-      <div class="logo-container">
-        <img src="assets/images/jansahayLogo.png" class="logo-img" alt="Jansahay Logo" />
+      <!-- STEP 1: MOBILE ENTRY -->
+      <div class="form-step" *ngIf="mode === 'mobile'" [@fadeSlide]>
+        <div class="form-header">
+          <h2>Welcome Back</h2>
+          <p>Please enter your details to sign in.</p>
+        </div>
+
+        <div class="input-group">
+          <label for="mobile">Mobile Number</label>
+          <div class="input-wrapper">
+            <span class="input-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
+              </svg>
+            </span>
+            <input id="mobile" type="tel" class="form-input" placeholder="98765 43210" maxlength="10"
+              [(ngModel)]="mobileNumber" [class.error-border]="error" (keyup.enter)="sendOtp()" />
+          </div>
+          <p class="error-text" *ngIf="error" [@shake]>{{ error }}</p>
+        </div>
+
+        <button class="primary-btn" (click)="sendOtp()" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Send OTP</span>
+          <span *ngIf="isLoading" class="loader"></span>
+        </button>
       </div>
-      <h1 class="title">जनसहाय</h1>
-      <p class="subtitle">Government Welfare Schemes & Support</p>
+
+      <!-- STEP 2: OTP ENTRY -->
+      <div class="form-step" *ngIf="mode === 'otp'" [@fadeSlide]>
+        <div class="form-header">
+          <button class="back-btn" (click)="mode = 'mobile'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back
+          </button>
+          <h2>Enter OTP</h2>
+          <p>We've sent a code to <strong>+91 {{ mobileNumber }}</strong></p>
+        </div>
+
+        <div class="otp-container">
+          <div class="otp-inputs">
+            <input #otpInput type="tel" maxlength="1" *ngFor="let x of [1, 2, 3, 4, 5, 6]; let i = index"
+              (input)="moveNext($event, i)" class="otp-digit" [class.error-border]="error" />
+          </div>
+          <p class="error-text" *ngIf="error" [@shake]>{{ error }}</p>
+        </div>
+
+        <button class="primary-btn" (click)="verifyOtp()" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Verify & Proceed</span>
+          <span *ngIf="isLoading" class="loader"></span>
+        </button>
+
+        <div class="resend-timer">
+          <p>Didn't receive code? <a href="javascript:void(0)">Resend</a></p>
+        </div>
+      </div>
+
     </div>
 
-    <!-- ================= STEP 1: MOBILE NUMBER ================= -->
-    <div class="step-container" *ngIf="mode === 'mobile'" [@fadeSlide]>
-
-      <div class="step-header">
-        <div class="icon-circle">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-            <line x1="12" y1="18" x2="12.01" y2="18"></line>
-          </svg>
-        </div>
-        <h2 class="otp-heading">Enter Mobile Number</h2>
-        <p class="otp-text">We will send a 6-digit OTP to this number</p>
-      </div>
-
-      <div class="input-group">
-        <div class="input-wrapper">
-          <input type="tel" maxlength="10" [(ngModel)]="mobileNumber" class="mobile-box"
-            placeholder="Enter 10-digit mobile number" aria-label="Mobile Number" [class.has-error]="error" />
-        </div>
-      </div>
-
-      <p class="error" *ngIf="error" [@shake]>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        {{ error }}
-      </p>
-
-      <button class="verify-btn" (click)="sendOtp()" [disabled]="isLoading">
-        <span class="btn-content" *ngIf="!isLoading">
-          <span>Send OTP</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </span>
-        <span class="btn-content" *ngIf="isLoading">
-          <span class="spinner"></span>
-          <span>Processing...</span>
-        </span>
-      </button>
-    </div>
-
-    <!-- ================= STEP 2: OTP SCREEN ================= -->
-    <div class="step-container" *ngIf="mode === 'otp'" [@fadeSlide]>
-
-      <div class="step-header">
-        <div class="icon-circle">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
-        </div>
-        <h2 class="otp-heading">Enter OTP</h2>
-        <p class="otp-text">
-          OTP sent to <strong>{{ mobileNumber }}</strong>
-        </p>
-      </div>
-
-      <div class="otp-input-boxes">
-        <input #otpInput type="tel" maxlength="1" *ngFor="let x of [1, 2, 3, 4, 5, 6]; let i = index"
-          (input)="moveNext($event, i)" class="otp-digit" [attr.aria-label]="'OTP digit ' + (i + 1)"
-          [class.has-error]="error" />
-      </div>
-
-      <p class="error" *ngIf="error" [@shake]>
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        {{ error }}
-      </p>
-
-      <button class="verify-btn" (click)="verifyOtp()" [disabled]="isLoading">
-        <span class="btn-content" *ngIf="!isLoading">
-          <span>Verify OTP</span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </span>
-        <span class="btn-content" *ngIf="isLoading">
-          <span class="spinner"></span>
-          <span>Verifying...</span>
-        </span>
-      </button>
-
-      <div class="bottom-links">
-        <a href="#" class="link-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
-            <polyline points="23 4 23 10 17 10"></polyline>
-            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-          </svg>
-          Resend OTP
-        </a>
-        <a href="#" class="link-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-          Change Number
-        </a>
-      </div>
+    <div class="copyright">
+      © 2024 JanSehay. All rights reserved.
     </div>
   </div>
 </div>
