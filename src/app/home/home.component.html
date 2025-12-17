@@ -1,7 +1,14 @@
 <div class="home-wrapper" [class.light-mode]="!isDarkMode">
   <!-- Animated Background -->
-  <div class="bg-layer-1"></div>
-  <div class="bg-layer-2"></div>
+  <div class="night-sky-container">
+    <div class="stars-sm"></div>
+    <div class="stars-md"></div>
+    <div class="stars-lg"></div>
+    <div class="shooting-stars">
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg fixed-top py-3" [class.navbar-light]="!isDarkMode"

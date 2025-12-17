@@ -7,52 +7,237 @@
 }
 
 /* ===== BACKGROUND LAYERS ===== */
+@function box-shadow($stars) {
+  $shadow: (
+  );
+
+@for $i from 1 through $stars {
+  $shadow: append($shadow, (random(2000) + 0px) (random(2000) + 0px) #fff, comma);
+}
+
+@return $shadow;
+}
+
+$stars-sm: box-shadow(700);
+$stars-md: box-shadow(200);
+$stars-lg: box-shadow(100);
+
 .home-wrapper {
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
   transition: background 0.3s ease;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   color: #fff;
 
   &.light-mode {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     color: #1e293b;
 
-    .bg-layer-1 {
-      background:
-        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
-    }
-
-    .bg-layer-2 {
-      opacity: 0.3;
-      filter: invert(1);
+    .night-sky-container {
+      display: none;
     }
   }
 }
 
-.bg-layer-1,
-.bg-layer-2 {
+.night-sky-container {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
+  overflow: hidden;
   pointer-events: none;
-  transition: all 0.3s ease;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
 }
 
-.bg-layer-1 {
-  background:
-    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 40%);
+.stars-sm {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: $stars-sm;
+  animation: animStar 50s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: $stars-sm;
+  }
 }
 
-.bg-layer-2 {
-  background: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='grid' width='80' height='80' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 80 0 L 0 0 0 80' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grid)'/%3E%3C/svg%3E");
-  animation: moveGrid 30s linear infinite;
+.stars-md {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: $stars-md;
+  animation: animStar 100s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: $stars-md;
+  }
+}
+
+.stars-lg {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: $stars-lg;
+  animation: animStar 150s linear infinite;
+
+  &:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 3px;
+    height: 3px;
+    background: transparent;
+    box-shadow: $stars-lg;
+  }
+}
+
+/* Shooting Stars */
+.shooting-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotateZ(45deg);
+}
+
+.shooting-stars span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 20px rgba(255, 255, 255, 1);
+  animation: shooting 4s linear infinite; // Slower default speed
+  opacity: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 1px;
+    right: 1px; // Position tail to the left (behind the head moving right)
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8)); // Tail fades in towards the head
+  }
+}
+
+// Randomize positions, delays, and durations
+.shooting-stars span:nth-child(1) {
+  top: 0;
+  left: 0;
+  animation-delay: 0s;
+  animation-duration: 3s;
+}
+
+.shooting-stars span:nth-child(2) {
+  top: 0;
+  left: 50%;
+  animation-delay: 4.2s;
+  animation-duration: 4.5s;
+}
+
+.shooting-stars span:nth-child(3) {
+  top: 50%;
+  left: 0;
+  animation-delay: 7.5s;
+  animation-duration: 3.8s;
+}
+
+.shooting-stars span:nth-child(4) {
+  top: 0;
+  left: 90%;
+  animation-delay: 11s;
+  animation-duration: 5s;
+}
+
+.shooting-stars span:nth-child(5) {
+  top: 90%;
+  left: 0;
+  animation-delay: 15s;
+  animation-duration: 4.2s;
+}
+
+.shooting-stars span:nth-child(6) {
+  top: 20%;
+  left: 20%;
+  animation-delay: 2.1s;
+  animation-duration: 3.5s;
+}
+
+.shooting-stars span:nth-child(7) {
+  top: 80%;
+  left: 80%;
+  animation-delay: 9s;
+  animation-duration: 4.8s;
+}
+
+.shooting-stars span:nth-child(8) {
+  top: 70%;
+  left: 30%;
+  animation-delay: 13s;
+  animation-duration: 3.2s;
+}
+
+.shooting-stars span:nth-child(9) {
+  top: 30%;
+  left: 70%;
+  animation-delay: 5.7s;
+  animation-duration: 4.1s;
+}
+
+.shooting-stars span:nth-child(10) {
+  top: 10%;
+  left: 60%;
+  animation-delay: 17s;
+  animation-duration: 5.5s;
+}
+
+@keyframes animStar {
+  from {
+    transform: translateY(0px);
+  }
+
+  to {
+    transform: translateY(-2000px);
+  }
+}
+
+@keyframes shooting {
+  0% {
+    transform: translateX(0);
+    opacity: 0; // Start invisible
+  }
+
+  1% {
+    opacity: 1; // Quickly become visible
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(1000px);
+    opacity: 0;
+  }
 }
 
 /* ===== NAVBAR ===== */
@@ -323,10 +508,73 @@
 .feature-card {
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
 
   &:hover {
     transform: translateY(-8px);
-    border-color: rgba(59, 130, 246, 0.3) !important;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+.features-section .row {
+
+  // Primary Card (Robot)
+  .col-md-6:nth-child(1) .feature-card:hover {
+    border-color: rgba(59, 130, 246, 0.5) !important;
+    background: rgba(59, 130, 246, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(59, 130, 246, 0.3);
+
+    .feature-icon-wrapper {
+      background: rgba(59, 130, 246, 0.2);
+    }
+  }
+
+  // Success Card (Document)
+  .col-md-6:nth-child(2) .feature-card:hover {
+    border-color: rgba(16, 185, 129, 0.5) !important;
+    background: rgba(16, 185, 129, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.3);
+
+    .feature-icon-wrapper {
+      background: rgba(16, 185, 129, 0.2);
+    }
+  }
+
+  // Warning Card (Real-time)
+  .col-md-6:nth-child(3) .feature-card:hover {
+    border-color: rgba(245, 158, 11, 0.5) !important;
+    background: rgba(245, 158, 11, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(245, 158, 11, 0.3);
+
+    .feature-icon-wrapper {
+      background: rgba(245, 158, 11, 0.2);
+    }
+  }
+
+  // Info Card (Secure)
+  .col-md-6:nth-child(4) .feature-card:hover {
+    border-color: rgba(6, 182, 212, 0.5) !important;
+    background: rgba(6, 182, 212, 0.1);
+    box-shadow: 0 10px 30px -10px rgba(6, 182, 212, 0.3);
+
+    .feature-icon-wrapper {
+      background: rgba(6, 182, 212, 0.2);
+    }
   }
 }
 
