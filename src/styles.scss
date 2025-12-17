@@ -162,3 +162,54 @@ a.text-main:hover {
     border-radius: 3px;
     visibility: hidden;
 }
+
+/* Cursor Styles - Desktop Only */
+@media (min-width: 992px) {
+    body {
+        cursor: none;
+    }
+
+    /* Inner Dot */
+    .cursor-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #fff;
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        /* Hidden initially until mousemove */
+        transition: opacity 0.3s ease;
+    }
+
+    /* Outer Ring */
+    .cursor-outline {
+        width: 28px;
+        height: 28px;
+        border: 1px solid #ffffff;
+        border-radius: 50%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 9998;
+        opacity: 0;
+        /* Hidden initially until mousemove */
+        transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
+    }
+}
+
+/* Ensure interactive elements show pointer on hover (fallback/override if needed) */
+a,
+button,
+.btn {
+    @media (min-width: 992px) {
+        cursor: none;
+        /* Hide default pointer to keep custom cursor visible */
+    }
+}

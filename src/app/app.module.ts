@@ -12,6 +12,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './home/home.component';
+import { CursorDirective } from './shared/directives/cursor.directive';
 
 export function httpTranslateLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -20,7 +21,7 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
 @NgModule({
   declarations: [
     AppComponent,
-    
+
   ],
   imports: [
     BrowserModule,
@@ -32,6 +33,7 @@ export function httpTranslateLoaderFactory(http: HttpClient) {
     MatSnackBarModule,
     CommonModule,
     HomeComponent,
+    CursorDirective,
     FormsModule,
     TranslateModule.forRoot({
       loader: {
