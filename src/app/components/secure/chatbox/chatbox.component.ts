@@ -142,6 +142,13 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     state: ''
   };
 
+  // Voice Input State
+  isVoiceInputActive = false;
+  @ViewChild('chatInput') chatInput!: ElementRef;
+
+  // Theme State
+  isDarkMode = false; // Default light mode for this component initially, or load from service
+
   // Application progress data - loaded from service
   applicationProgress: ApplicationProgress | null = null;
 
@@ -669,6 +676,29 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleSpeaker() {
     this.isSpeakerOn = !this.isSpeakerOn;
     console.log(`Speaker ${this.isSpeakerOn ? 'enabled' : 'disabled'}`);
+  }
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    // Here you would typically also update a global theme service or body class
+    // For now, it just toggles the local state for the UI effect
+  }
+
+  toggleVoiceInput() {
+    this.isVoiceInputActive = !this.isVoiceInputActive;
+
+    if (this.isVoiceInputActive) {
+      // Simulate listening
+      setTimeout(() => {
+        if (this.isVoiceInputActive) {
+          // Simulate recognized text result after a few seconds
+          this.message = "How can I apply for PM Kisan scheme?";
+          this.isVoiceInputActive = false;
+          // Focus back on input
+          setTimeout(() => this.chatInput?.nativeElement?.focus(), 100);
+        }
+      }, 3000);
+    }
   }
 
   endVideoCall() {

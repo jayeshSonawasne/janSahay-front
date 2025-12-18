@@ -2429,14 +2429,47 @@ textarea.form-control-enhanced {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  color: #94a3b8;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none; // No border for solid look
+  color: #fff; // Icons always white
 
+  // Default colorful state (Solid Backgrounds)
+  &:has(.bi-linkedin) {
+    background: #0077b5;
+    box-shadow: 0 4px 6px rgba(0, 119, 181, 0.2);
+  }
+
+  &:has(.bi-twitter) {
+    background: #1DA1F2;
+    box-shadow: 0 4px 6px rgba(29, 161, 242, 0.2);
+  }
+
+  &:has(.bi-instagram) {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    box-shadow: 0 4px 6px rgba(214, 36, 159, 0.2);
+  }
+
+  &:has(.bi-facebook) {
+    background: #1877f2;
+    box-shadow: 0 4px 6px rgba(24, 119, 242, 0.2);
+  }
+
+  // Hover state overrides
   &:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.1);
+    filter: brightness(1.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* ===== NEW ANIMATIONS FOR TEAM ===== */
+.fade-in-card {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

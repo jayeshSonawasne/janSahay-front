@@ -18,31 +18,30 @@
     <div class="d-flex align-items-center gap-3">
 
       <!-- Notification Button -->
-      <button class="icon-btn position-relative">
-        <i class="bi bi-bell"></i>
+      <button class="icon-btn btn-notify position-relative" title="Notifications">
+        <i class="bi bi-bell" [class.bell-shake]="true"></i>
         <span class="badge rounded-pill">3</span>
       </button>
 
       <!-- Translate Button -->
-      <!-- Translate Button -->
-      <button class="icon-btn" (click)="toggleLanguage()"
+      <button class="icon-btn btn-translate" (click)="toggleLanguage()"
         [title]="(translationService.currentLang$ | async) === 'en' ? 'Switch to Marathi' : 'Switch to English'">
         <i class="bi bi-translate"></i>
         <span class="ms-1 small fw-bold">{{ (translationService.currentLang$ | async) === 'en' ? 'EN' : 'MR' }}</span>
       </button>
 
       <!-- Dark Mode Button -->
-      <button class="icon-btn">
-        <i class="bi bi-moon"></i>
+      <button class="icon-btn btn-theme" (click)="toggleTheme()" title="Toggle Theme">
+        <i class="bi" [class.bi-moon]="!isDarkMode" [class.bi-sun]="isDarkMode" [class.icon-rotate]="true"></i>
       </button>
 
       <!-- Settings Button -->
-      <button class="icon-btn">
+      <button class="icon-btn btn-settings" title="Settings">
         <i class="bi bi-gear"></i>
       </button>
 
       <!-- User Button -->
-      <button class="avatar-btn">
+      <button class="avatar-btn" title="Profile">
         JD
       </button>
 
@@ -71,15 +70,24 @@
 
         <!-- Menu Items -->
         <div class="menu-item">
-          <i class="bi bi-clock-history"></i> {{ 'menu.chatHistory' | translate }}
+          <div class="icon-box blue">
+            <i class="bi bi-clock-history"></i>
+          </div>
+          {{ 'menu.chatHistory' | translate }}
         </div>
 
         <div class="menu-item">
-          <i class="bi bi-file-earmark-text"></i> {{ 'menu.myApplication' | translate }}
+          <div class="icon-box green">
+            <i class="bi bi-file-earmark-text"></i>
+          </div>
+          {{ 'menu.myApplication' | translate }}
         </div>
 
         <div class="menu-item">
-          <i class="bi bi-question-circle"></i> {{ 'menu.helpSupport' | translate }}
+          <div class="icon-box orange">
+            <i class="bi bi-question-circle"></i>
+          </div>
+          {{ 'menu.helpSupport' | translate }}
         </div>
 
         <hr class="my-4">
@@ -236,17 +244,31 @@
         <div class="divider"></div>
 
         <!-- Input area -->
-        <div class="chat-input d-flex align-items-center gap-2">
+        <!-- Input area -->
+        <div class="chat-input d-flex align-items-center gap-2 position-relative">
           <button class="icon-btn-plain" (click)="attachFile()" aria-label="Attach">
             <i class="bi bi-paperclip"></i>
           </button>
 
-          <input type="text" class="form-control input-field" [placeholder]="'input.placeholder' | translate"
-            [(ngModel)]="message" (keydown.enter)="sendMessage()" />
+          <!-- Voice Visualizer Overlay -->
+          <div class="voice-visualizer" *ngIf="isVoiceInputActive" (click)="toggleVoiceInput()">
+            <div class="voice-bars">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+            <span class="ms-2 text-muted small">Listening...</span>
+          </div>
+
+          <input #chatInput type="text" class="form-control input-field" [placeholder]="'input.placeholder' | translate"
+            [(ngModel)]="message" (keydown.enter)="sendMessage()" [class.invisible]="isVoiceInputActive" />
 
           <div class="input-right d-flex align-items-center gap-2">
-            <button class="icon-btn-plain" (click)="toggleMic()" title="Voice">
-              <i class="bi bi-mic"></i>
+            <button class="icon-btn-plain" [class.text-danger]="isVoiceInputActive" (click)="toggleVoiceInput()"
+              title="Voice">
+              <i class="bi" [class.bi-mic]="!isVoiceInputActive" [class.bi-mic-fill]="isVoiceInputActive"></i>
             </button>
             <button class="icon-btn-plain" (click)="toggleNetwork()" title="Network">
               <i class="bi bi-wifi"></i>
@@ -323,15 +345,21 @@
               <div class="quick-links">
                 <h6>{{ 'section.quickLinks' | translate }}</h6>
                 <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Saved Schemes'})">
-                  <i class="bi bi-bookmark"></i>
+                  <div class="icon-box purple small">
+                    <i class="bi bi-bookmark-fill"></i>
+                  </div>
                   {{ 'link.saved' | translate }}
                 </div>
                 <div class="quick-link-item" (click)="onQuickLinkClick({name: 'My Eligibility'})">
-                  <i class="bi bi-person-check"></i>
+                  <div class="icon-box teal small">
+                    <i class="bi bi-person-check-fill"></i>
+                  </div>
                   {{ 'link.eligibility' | translate }}
                 </div>
                 <div class="quick-link-item" (click)="onQuickLinkClick({name: 'Calculator'})">
-                  <i class="bi bi-calculator"></i>
+                  <div class="icon-box yellow small">
+                    <i class="bi bi-calculator-fill"></i>
+                  </div>
                   {{ 'link.calculator' | translate }}
                 </div>
               </div>

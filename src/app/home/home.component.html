@@ -492,9 +492,9 @@
         </div>
 
         <!-- Team Grid -->
-        <div class="row g-4 justify-content-center">
-          <div class="col-lg-3 col-md-6" *ngFor="let member of teamMembers; let i = index"
-            [style.animation-delay]="i * 0.15 + 's'">
+        <div class="row g-2 justify-content-center">
+          <div class="col-lg-3 col-md-6 fade-in-card" *ngFor="let member of teamMembers; let i = index"
+            [style.transition-delay]="i * 0.15 + 's'">
             <div class="team-card h-100 position-relative overflow-hidden rounded-4" [class.bg-dark]="isDarkMode"
               [class.bg-white]="!isDarkMode" [class.card-dark-mode]="isDarkMode">
 
@@ -511,23 +511,30 @@
                 <!-- Info -->
                 <h4 class="fw-bold mb-1" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">{{member.name}}
                 </h4>
-                <p class="text-primary fw-medium mb-3">{{member.role}}</p>
+                <p class="text-primary fw-medium mb-2">{{member.role}}</p>
+                <p class="small opacity-75 mb-3 px-2">{{member.workInfo}}</p>
 
                 <!-- Expertise Tags -->
                 <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
                   <span *ngFor="let skill of member.expertise"
-                    class="badge bg-primary bg-opacity-10 text-primary rounded-pill fw-normal px-3 py-2">
+                    class="badge bg-primary bg-opacity-10 text-white rounded-pill fw-normal px-3 py-2">
                     {{skill}}
                   </span>
                 </div>
 
                 <!-- Social Links -->
                 <div class="team-social d-flex justify-content-center gap-3">
-                  <a href="#" class="social-btn">
+                  <a [href]="member.social.linkedin" class="social-btn" target="_blank">
                     <i class="bi bi-linkedin"></i>
                   </a>
-                  <a href="#" class="social-btn">
-                    <i class="bi bi-twitter-x"></i>
+                  <a [href]="member.social.twitter" class="social-btn" target="_blank">
+                    <i class="bi bi-twitter"></i>
+                  </a>
+                  <a [href]="member.social.instagram" class="social-btn" target="_blank">
+                    <i class="bi bi-instagram"></i>
+                  </a>
+                  <a [href]="member.social.facebook" class="social-btn" target="_blank">
+                    <i class="bi bi-facebook"></i>
                   </a>
                 </div>
               </div>
