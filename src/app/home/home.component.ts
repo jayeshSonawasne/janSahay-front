@@ -31,15 +31,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'Ravindra Salunkhe',
       role: 'Team Owner & Lead',
       expertise: ['Project Leadership', 'Strategic Planning', 'Management'],
-      image: 'https://ui-avatars.com/api/?name=Ravindra+Salunkhe&background=6366f1&color=fff&size=256',
+      image: 'assets/images/Ravindra_Salunkhe.png',
       isLead: true,
       social: { linkedin: '#', twitter: '#' }
     },
     {
       name: 'Amar Gaikwad',
-      role: 'Team Owner & Lead and Designer',
+      role: 'Team Owner & Lead',
       expertise: ['UI/UX Design', 'Product Strategy', 'Creative Direction'],
-      image: 'https://ui-avatars.com/api/?name=Amar+Gaikwad&background=8b5cf6&color=fff&size=256',
+      image: 'assets/images/Amar_Gaikwad.png',
       isLead: true,
       social: { linkedin: '#', twitter: '#' }
     },
@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'Kiran Mane',
       role: 'Sr. Mobile Application Developer',
       expertise: ['Mobile Architecture', 'Performance Optimization', 'App Security'],
-      image: 'https://ui-avatars.com/api/?name=Kiran+Mane&background=ec4899&color=fff&size=256',
+      image: 'assets/images/Kiran_Mane.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#' }
     },
@@ -55,7 +55,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'Uddhav Bade',
       role: 'Sr. Mobile Application Developer',
       expertise: ['Native Development', 'Cross-Platform', 'API Integration'],
-      image: 'https://ui-avatars.com/api/?name=Uddhav+Bade&background=f43f5e&color=fff&size=256',
+      image: 'assets/images/Uddhav_Bade.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#' }
     },
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     {
       name: 'Shrutika Mapari',
       role: 'Software Developer',
-      expertise: ['Frontend Architecture', 'Web Technologies', 'Problem Solving'],
+      expertise: ['Frontend Developer', 'Angular', 'Node.js'],
       image: 'assets/images/Shrutika_Mapari.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#' }
@@ -79,15 +79,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'Siddhesh Gophane',
       role: 'UI Developer',
       expertise: ['Responsive Design', 'HTML5/SCSS', 'Animations'],
-      image: 'https://ui-avatars.com/api/?name=Siddhesh+Gophane&background=f59e0b&color=fff&size=256',
+      image: 'assets/images/Siddhesh_Gophane.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#' }
     },
     {
       name: 'Tejas Phalke',
-      role: 'Jr. Business Analyst',
+      role: 'Jr. Data Analyst',
       expertise: ['Requirement Analysis', 'Agile Methodology', 'Documentation'],
-      image: 'https://ui-avatars.com/api/?name=Tejas+Phalke&background=3b82f6&color=fff&size=256',
+      image: 'assets/images/Tejas_Phalake.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#' }
     },
@@ -103,7 +103,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'Saurabh Khedkar',
       role: 'Quality Assurance Engineer',
       expertise: ['Automation Testing', 'Quality Control', 'Bug Tracking'],
-      image: 'https://ui-avatars.com/api/?name=Saurabh+Khedkar&background=64748b&color=fff&size=256',
+      image: 'assets/images/Saurabh_Khedkar.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#' }
     }
