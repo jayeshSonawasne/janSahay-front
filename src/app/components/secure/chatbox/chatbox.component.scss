@@ -1175,7 +1175,7 @@
 .expert-name {
   font-size: 16px;
   font-weight: 600;
-  color: #1f2937;
+  color: #fff;
   margin: 0 0 4px 0;
 }
 
@@ -3939,6 +3939,346 @@
     &:hover {
       padding: 10px;
       margin: 0 -10px;
+    }
+  }
+}
+
+/* Full Screen Video Call Styles */
+.video-call-modal-content {
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+  background-color: #111827;
+  /* Dark background */
+  overflow: hidden;
+}
+
+.video-call-loading-overlay {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111827;
+}
+
+.video-interface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Header Overlay */
+.video-header-overlay {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  /* Let clicks pass through except on buttons */
+
+  .expert-info-pill {
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    pointer-events: auto;
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #ef4444;
+      /* Recording/Live red */
+      border-radius: 50%;
+
+      &.pulse {
+        animation: pulse-red 2s infinite;
+      }
+    }
+
+    .expert-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .separator {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .call-timer {
+      font-variant-numeric: tabular-nums;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+  }
+
+  .minimize-btn {
+    pointer-events: auto;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+/* Main Video Feed */
+.main-video-feed {
+  position: absolute;
+  inset: 0;
+  background: #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+
+  .video-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+
+    .avatar-large {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.3);
+    }
+
+    .camera-off-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+    }
+  }
+}
+
+/* PIP Video Feed */
+.pip-video-feed {
+  position: absolute;
+  bottom: 100px;
+  /* Above control bar */
+  right: 24px;
+  width: 240px;
+  height: 160px;
+  background: #374151;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 10;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .pip-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+    background: #1f2937;
+
+    i {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+
+    .you-label {
+      font-size: 12px;
+    }
+  }
+}
+
+/* Controls Bar */
+.video-controls-bar {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  background: #1f2937;
+  /* Solid dark background like reference */
+  border-radius: 32px;
+  /* Pill shape for container */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+
+  .controls-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+
+    &.center {
+      padding: 0 16px;
+      margin: 0 8px;
+    }
+
+    /* Separator after left group */
+    &.left::after {
+      content: '';
+      position: absolute;
+      right: -12px;
+      height: 24px;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Separator before right group */
+    &.right::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      height: 24px;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  .control-btn {
+    width: 64px;
+    /* Wider for pill shape */
+    height: 44px;
+    border-radius: 22px;
+    /* Pill radius */
+    border: none;
+    background: #374151;
+    /* Lighter slightly than bar */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 18px;
+
+    &:hover {
+      background: #4b5563;
+      transform: translateY(-2px);
+    }
+
+    &.active {
+      background: white;
+      color: #1f2937;
+    }
+
+    &.off {
+      background: #374151;
+      /* Keep normal background */
+      color: #fff;
+      background: #374151;
+
+      &:hover {
+        background: #4b5563;
+      }
+    }
+
+    &.end-call-btn {
+      background: #ef4444;
+      width: 80px;
+      /* Extra wide */
+      height: 44px;
+      border-radius: 22px;
+
+      &:hover {
+        background: #dc2626;
+        transform: translateY(-2px) scale(1.02);
+      }
+    }
+  }
+}
+
+@keyframes pulse-red {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+  .pip-video-feed {
+    width: 120px;
+    height: 80px;
+    bottom: 100px;
+    right: 16px;
+  }
+
+  .video-controls-bar {
+    width: auto;
+    max-width: 95%;
+    padding: 8px 12px;
+    gap: 8px;
+
+    .control-btn {
+      width: 48px;
+      height: 36px;
+      border-radius: 18px;
+      font-size: 16px;
+
+      &.end-call-btn {
+        width: 60px;
+        height: 36px;
+      }
+    }
+
+    .controls-group {
+      gap: 4px;
+
+      &.center {
+        padding: 0 8px;
+        margin: 0 4px;
+      }
+
+      &.left::after,
+      &.right::before {
+        display: none;
+      }
+
+      /* Hide separators on mobile */
     }
   }
 }

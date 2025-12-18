@@ -78,10 +78,9 @@ export class CursorDirective implements AfterViewInit, OnDestroy {
         this.mouseX = e.clientX;
         this.mouseY = e.clientY;
 
-        // Immediate update for dot
+        // Immediate update for dot using transform for performance
         if (this.cursorDot) {
-            this.cursorDot.style.left = `${this.mouseX}px`;
-            this.cursorDot.style.top = `${this.mouseY}px`;
+            this.cursorDot.style.transform = `translate3d(${this.mouseX}px, ${this.mouseY}px, 0) translate(-50%, -50%)`;
         }
     }
 
@@ -114,21 +113,19 @@ export class CursorDirective implements AfterViewInit, OnDestroy {
     private animate(): void {
         // Inertia for outline
         // Lower factor = more delay/smoother (e.g. 0.15)
-        const inertia = 0.15;
+        const inertia = 0.25;
 
         this.outlineX += (this.mouseX - this.outlineX) * inertia;
         this.outlineY += (this.mouseY - this.outlineY) * inertia;
 
         if (this.cursorOutline) {
-            this.cursorOutline.style.left = `${this.outlineX}px`;
-            this.cursorOutline.style.top = `${this.outlineY}px`;
+            // Use transform for position + centering + scale
+            const scale = this.isHovering ? 1.5 : 1;
+            this.cursorOutline.style.transform = `translate3d(${this.outlineX}px, ${this.outlineY}px, 0) translate(-50%, -50%) scale(${scale})`;
 
-            // Scale effect on hover
             if (this.isHovering) {
-                this.cursorOutline.style.transform = `translate(-50%, -50%) scale(1.5)`;
                 this.cursorOutline.style.backgroundColor = 'rgba(79, 124, 255, 0.1)';
             } else {
-                this.cursorOutline.style.transform = `translate(-50%, -50%) scale(1)`;
                 this.cursorOutline.style.backgroundColor = 'transparent';
             }
         }

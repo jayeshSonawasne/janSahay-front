@@ -173,7 +173,7 @@ a.text-main:hover {
     .cursor-dot {
         width: 6px;
         height: 6px;
-        background-color: #fff;
+        background-color: #5fa0f5;
         border-radius: 50%;
         position: fixed;
         top: 0;
@@ -184,13 +184,14 @@ a.text-main:hover {
         opacity: 0;
         /* Hidden initially until mousemove */
         transition: opacity 0.3s ease;
+        will-change: transform;
     }
 
     /* Outer Ring */
     .cursor-outline {
         width: 28px;
         height: 28px;
-        border: 1px solid #ffffff;
+        border: 1px solid #5fa0f5;
         border-radius: 50%;
         position: fixed;
         top: 0;
@@ -200,7 +201,8 @@ a.text-main:hover {
         z-index: 9998;
         opacity: 0;
         /* Hidden initially until mousemove */
-        transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
+        transition: opacity 0.3s ease, background-color 0.2s ease;
+        will-change: transform;
     }
 }
 
