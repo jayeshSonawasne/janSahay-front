@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'Ajinkya Mali',
       role: 'Jr. AI/ML Engineer',
       expertise: ['Machine Learning', 'NLP', 'Data Science'],
-      image: 'https://ui-avatars.com/api/?name=Ajinkya+Mali&background=8b5cf6&color=fff&size=256',
+      image: 'assets/images/Ajinkya_Mali.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#' }
     },

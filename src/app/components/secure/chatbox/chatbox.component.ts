@@ -1,6 +1,6 @@
 // chatbox.component.ts - REFACTORED WITH DYNAMIC SERVICES
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -45,6 +45,10 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('callModal', { static: false }) callModal: any;
   @ViewChild('applySchemeModal', { static: false }) applySchemeModal: any;
   @ViewChild('videoCallModal', { static: false }) videoCallModal: any;
+  @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
+
+  // Media Stream
+  private localStream: MediaStream | null = null;
 
   // Subscriptions for cleanup
   private subscriptions: Subscription = new Subscription();
@@ -121,6 +125,7 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
   isVideoOn: boolean = true;
   videoCallInterval: any;
   videoCallStartTime: Date = new Date();
+  isVideoMinimized: boolean = false;
 
   // Dynamic data loaded from services
   categories: Category[] = [];
@@ -166,6 +171,13 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadApplicationProgress();
     this.loadRequiredDocuments();
     this.loadChatHistory();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+    this.stopCallTimer();
+    this.stopVideoCallTimer();
+    this.stopLocalVideo();
   }
 
   // Data loading methods
@@ -537,6 +549,7 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isMuted = false;
     this.isSpeakerOn = false;
     this.videoCallTimer = '00:00';
+    this.isVideoMinimized = false;
 
     // Close expert modal and open video call modal
     if (this.talkToExpertModalInstance) {
@@ -547,11 +560,20 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
       this.videoCallModalInstance.show();
     }
 
+    // Start Webcam initialization immediately (permissions)
+    this.initializeLocalStream();
+
     // Simulate video call connection with loading
     setTimeout(() => {
       this.isStartingVideoCall = false;
       this.videoCallStartTime = new Date();
       this.startVideoCallTimer();
+
+      // IMPORTANT: Attach video stream only AFTER the view is rendered (loading overlay gone)
+      // Small delay to ensure *ngIf change has processed and video tag exists
+      setTimeout(() => {
+        this.attachLocalStream();
+      }, 100);
 
       // Add chat message
       this.addAssistantMessage(`Video call started with ${expertName}. You can now discuss your queries directly.`);
@@ -587,14 +609,56 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   // Video Call Control Methods
-  toggleVideo() {
+  toggleVideoMinimize() {
+    this.isVideoMinimized = !this.isVideoMinimized;
+    // We need to handle the backdrop removal/addition if we want the user to interact with the background
+    // For now, simpler implementation: just UI shrink
+  }
+
+  async toggleVideo() {
     this.isVideoOn = !this.isVideoOn;
     console.log(`Video ${this.isVideoOn ? 'enabled' : 'disabled'}`);
+
+    if (!this.localStream) return;
+
+    if (this.isVideoOn) {
+      // Turning Video ON: request a new video track because the old one was stopped
+      try {
+        const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const newVideoTrack = videoStream.getVideoTracks()[0];
+
+        if (newVideoTrack) {
+          this.localStream.addTrack(newVideoTrack);
+          // Refresh srcObject to ensure UI updates (sometimes needed)
+          if (this.localVideo && this.localVideo.nativeElement) {
+            this.localVideo.nativeElement.srcObject = this.localStream;
+          }
+        }
+      } catch (error) {
+        console.error('Error restarting video:', error);
+        this.isVideoOn = false; // Revert UI if failed
+        alert('Could not restart camera.');
+      }
+    } else {
+      // Turning Video OFF: stop the track completely to turn off the hardware LED
+      const videoTracks = this.localStream.getVideoTracks();
+      videoTracks.forEach(track => {
+        track.stop();
+        this.localStream?.removeTrack(track); // Remove ended track
+      });
+    }
   }
 
   toggleMic() {
     this.isMuted = !this.isMuted;
     console.log(`Microphone ${this.isMuted ? 'muted' : 'unmuted'}`);
+
+    if (this.localStream) {
+      const audioTrack = this.localStream.getAudioTracks()[0];
+      if (audioTrack) {
+        audioTrack.enabled = !this.isMuted;
+      }
+    }
   }
 
   // Alias method for toggleMute to match template
@@ -613,8 +677,8 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
       this.videoCallModalInstance.hide();
     }
 
-    // Add message about ended video call
     this.addAssistantMessage(`Your video call with ${this.currentCallExpert} has ended. Duration: ${this.videoCallTimer}`);
+    this.stopLocalVideo();
   }
 
   openChatDuringCall() {
@@ -636,6 +700,35 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.videoCallInterval) {
       clearInterval(this.videoCallInterval);
       this.videoCallInterval = null;
+    }
+  }
+
+  private async initializeLocalStream() {
+    try {
+      this.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    } catch (error) {
+      console.error('Error accessing media devices:', error);
+      alert('Could not access camera/microphone. Please ensure permissions are granted.');
+      this.isVideoOn = false;
+    }
+  }
+
+  private attachLocalStream() {
+    if (this.localStream && this.localVideo && this.localVideo.nativeElement) {
+      this.localVideo.nativeElement.srcObject = this.localStream;
+      this.localVideo.nativeElement.muted = true; // Mute local video to prevent feedback
+    } else {
+      console.warn('Cannot attach video stream: Stream or Video Element missing');
+    }
+  }
+
+  private stopLocalVideo() {
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => track.stop());
+      this.localStream = null;
+    }
+    if (this.localVideo && this.localVideo.nativeElement) {
+      this.localVideo.nativeElement.srcObject = null;
     }
   }
 
@@ -1477,9 +1570,5 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     // this.message = chat.title;
   }
 
-  ngOnDestroy() {
-    this.stopCallTimer();
-    this.stopVideoCallTimer();
-    this.subscriptions.unsubscribe(); // Clean up all subscriptions
-  }
+
 }

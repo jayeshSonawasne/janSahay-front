@@ -4282,3 +4282,111 @@
     }
   }
 }
+/* Video Call Modal Styles */
+.video-call-modal-content {
+  background: #111827;
+  color: white;
+  border: none;
+  height: 100vh; /* Default fullscreen height */
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &.minimized {
+    height: 100%; /* Take container height */
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+}
+
+/* Custom Minimized Dialog Class */
+.modal-minimized-dialog {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px !important; /* Force width */
+  margin: 0;
+  z-index: 1060;
+  transition: all 0.3s ease;
+  max-width: none;
+  pointer-events: none; /* Let clicks pass through empty areas */
+  
+  .modal-content {
+    pointer-events: auto; /* Re-enable clicks on content */
+    height: 400px; /* Fixed height for minimized view */
+    
+    .video-interface {
+      .video-header-overlay {
+        padding: 10px;
+        
+        .expert-info-pill {
+          padding: 4px 10px;
+          background: rgba(0,0,0,0.6);
+          backdrop-filter: blur(4px);
+          
+          .expert-name {
+            font-size: 12px;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          
+          .call-timer {
+            font-size: 11px;
+          }
+          
+          .status-dot {
+            width: 6px;
+            height: 6px;
+          }
+        }
+        
+        .minimize-btn {
+          width: 30px;
+          height: 30px;
+          
+          i { font-size: 14px; }
+        }
+      }
+      
+      .pip-video-feed {
+        width: 80px;
+        height: 100px;
+        bottom: 80px;
+        right: 16px;
+        border-width: 1px;
+      }
+      
+      .video-controls-bar {
+        padding: 10px;
+        height: 60px;
+        background: rgba(0,0,0,0.8);
+        
+        .controls-group.left, 
+        .controls-group.right {
+          display: none;
+        }
+        
+        .controls-group.center {
+          width: 100%;
+          justify-content: space-around;
+        }
+        
+        .control-btn {
+          width: 36px;
+          height: 36px;
+          
+          i { font-size: 16px; }
+        }
+        
+        .end-call-btn {
+          width: 40px;
+          height: 36px;
+          border-radius: 12px;
+        }
+      }
+    }
+  }
+}
+

@@ -1023,9 +1023,10 @@
 
 <!-- Video Call Modal -->
 <div #videoCallModal class="modal fade" id="videoCallModal" tabindex="-1" aria-labelledby="videoCallModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-fullscreen">
-    <div class="modal-content video-call-modal-content">
+  aria-hidden="true" [attr.data-bs-backdrop]="isVideoMinimized ? 'false' : 'static'">
+  <div class="modal-dialog" [class.modal-fullscreen]="!isVideoMinimized"
+    [class.modal-minimized-dialog]="isVideoMinimized">
+    <div class="modal-content video-call-modal-content" [class.minimized]="isVideoMinimized">
 
       <!-- Video Call Overlay Container -->
       <div *ngIf="isStartingVideoCall" class="video-call-loading-overlay">
@@ -1049,8 +1050,10 @@
             <span class="separator">•</span>
             <span class="call-timer">{{ videoCallTimer }}</span>
           </div>
-          <button class="minimize-btn" title="Minimize">
-            <i class="bi bi-box-arrow-in-down-right"></i>
+          <button class="minimize-btn" (click)="toggleVideoMinimize()"
+            [title]="isVideoMinimized ? 'Maximize' : 'Minimize'">
+            <i class="bi" [class.bi-box-arrow-in-down-right]="!isVideoMinimized"
+              [class.bi-arrows-angle-expand]="isVideoMinimized"></i>
           </button>
         </div>
 
@@ -1067,11 +1070,12 @@
 
         <!-- PIP Video Feed (User) -->
         <div class="pip-video-feed">
-          <div class="pip-content">
-            <i class="bi bi-person-fill" *ngIf="!isVideoOn"></i>
+          <div class="pip-content" [class.d-none]="isVideoOn">
+            <i class="bi bi-person-fill"></i>
             <span class="you-label">You</span>
           </div>
-          <!-- In a real app, local <video> tag here -->
+          <video #localVideo autoplay playsinline [class.d-none]="!isVideoOn"
+            style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
         </div>
 
         <!-- Bottom Control Bar -->
