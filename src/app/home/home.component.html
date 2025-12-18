@@ -103,7 +103,7 @@
                 to help you access the support you deserve.
               </p>
 
-              <div class="d-flex flex-wrap gap-3 mb-5">
+              <div class="d-flex flex-wrap gap-2 mb-5">
                 <button class="cssbuttons-io-button" (click)="goToChatbox()" [disabled]="isLoading">
 
                   <span *ngIf="!isLoading">Start Free Assessment</span>
@@ -129,7 +129,7 @@
               </div>
 
               <!-- Animated Stats -->
-              <div class="row g-4 stats-container">
+              <div class="row g-2 stats-container">
                 <div class="col-4">
                   <div class="flip-card text-center" [class.animate-flip]="activeTab === 'home' && statsAnimated"
                     [style.animation-delay]="'0s'">
@@ -308,7 +308,7 @@
             </div>
           </div>
 
-          <div class="row g-4">
+          <div class="row g-2">
             <div class="col-md-6 col-lg-3">
               <div class="feature-card h-100 bg-opacity-25 border border-opacity-10 rounded-4 p-4"
                 [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
@@ -375,11 +375,11 @@
 
     <!-- SCHEMES TAB -->
     <div *ngIf="activeTab === 'schemes'" class="tab-content fade-in pt-5 mt-5">
-      <div class="container py-5">
+      <div class="container py-5 pb-0">
         <h2 class="display-5 fw-bold mb-4 text-center" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
           Explore Schemes
         </h2>
-        <div class="row g-4">
+        <div class="row g-2">
           <div class="col-md-6 col-lg-4" *ngFor="let scheme of schemes">
             <div class="card h-100 border-0 scheme-card" [class.bg-dark]="isDarkMode" [class.bg-white]="!isDarkMode"
               [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
@@ -404,14 +404,14 @@
 
     <!-- GUIDE TAB -->
     <div *ngIf="activeTab === 'guide'" class="tab-content fade-in pt-5 mt-5">
-      <div class="container py-5">
+      <div class="container py-5 pb-0">
         <h2 class="display-5 fw-bold mb-5 text-center" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
           How It Works
         </h2>
         <div class="row justify-content-center">
           <div class="col-lg-8">
             <div class="timeline">
-              <div class="timeline-item d-flex gap-4 mb-5" *ngFor="let step of guideSteps; let i = index"
+              <div class="timeline-item d-flex gap-2 mb-5" *ngFor="let step of guideSteps; let i = index"
                 [class.step-visible]="guideStepsVisible[i]">
                 <div class="timeline-marker d-flex flex-column align-items-center">
                   <div
@@ -433,7 +433,7 @@
 
             <!-- Animated Progress Indicator -->
             <div class="progress-indicator mt-5">
-              <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
+              <div class="d-flex justify-content-center align-items-center gap-2 mb-3">
                 <div class="step-dot" [class.active]="guideStepsVisible[0]"></div>
                 <div class="step-line" [class.active]="guideStepsVisible[1]"></div>
                 <div class="step-dot" [class.active]="guideStepsVisible[1]"></div>
@@ -453,11 +453,11 @@
 
     <!-- BENEFITS TAB -->
     <div *ngIf="activeTab === 'benefits'" class="tab-content fade-in pt-5 mt-5">
-      <div class="container py-5">
+      <div class="container py-5 pb-0">
         <h2 class="display-5 fw-bold mb-5 text-center" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
           Benefits of JanSahay
         </h2>
-        <div class="row g-4">
+        <div class="row g-2">
           <div class="col-md-6" *ngFor="let benefit of benefits">
             <div class="d-flex align-items-start p-4 rounded-4 h-100" [class.bg-white]="!isDarkMode"
               [class.bg-dark]="isDarkMode" [class.border]="isDarkMode" [class.border-secondary]="isDarkMode">
@@ -478,7 +478,7 @@
 
     <!-- TEAM TAB -->
     <div *ngIf="activeTab === 'team'" class="tab-content fade-in pt-5 mt-5">
-      <div class="container py-5">
+      <div class="container py-5 pb-0">
         <!-- Section Header -->
         <div class="row justify-content-center mb-5">
           <div class="col-lg-10 text-center">
@@ -523,7 +523,7 @@
                 </div>
 
                 <!-- Social Links -->
-                <div class="team-social d-flex justify-content-center gap-3">
+                <div class="team-social d-flex justify-content-center gap-2">
                   <a [href]="member.social.linkedin" class="social-btn" target="_blank">
                     <i class="bi bi-linkedin"></i>
                   </a>
@@ -546,7 +546,7 @@
 
     <!-- CONTACT TAB -->
     <div *ngIf="activeTab === 'contact'" class="tab-content fade-in pt-5 mt-5">
-      <div class="container py-5">
+      <div class="container py-5 pb-0">
         <!-- Section Header -->
         <div class="row justify-content-center mb-5">
           <div class="col-lg-8 text-center">
@@ -564,7 +564,7 @@
         </div>
 
         <!-- Contact Info Cards -->
-        <div class="row g-4 mb-4">
+        <div class="row g-2 mb-2">
           <div class="col-lg-4 col-md-6">
             <div class="contact-info-card h-100 d-flex flex-column">
               <div class="contact-icon-wrapper mb-4">
@@ -625,7 +625,7 @@
         </div>
 
         <!-- Contact Form and Additional Info -->
-        <div class="row g-4">
+        <div class="row g-2">
           <!-- Contact Form -->
           <div class="col-lg-12">
             <div class="contact-form-card">
@@ -676,7 +676,7 @@
           </div>
 
           <!-- Additional Info Sidebar -->
-          <div class="row mt-4">
+          <div class="row g-2">
             <!-- Office Hours -->
             <div class="col-lg-6 col-md-12">
               <div class="contact-sidebar-card mb-4">
@@ -739,7 +739,7 @@
                   <i class="bi bi-share-fill me-2 text-success"></i>
                   Follow Us
                 </h5>
-                <div class="social-links d-flex gap-3 flex-wrap">
+                <div class="social-links d-flex gap-2 flex-wrap">
                   <a href="#" class="social-link facebook"><i class="bi bi-facebook"></i></a>
                   <a href="#" class="social-link twitter"><i class="bi bi-twitter"></i></a>
                   <a href="#" class="social-link linkedin"><i class="bi bi-linkedin"></i></a>
@@ -757,7 +757,7 @@
   </main>
 
   <!-- CTA Section (Visible on all tabs) -->
-  <section class="cta-section py-6">
+  <section class="cta-section py-4">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -842,7 +842,7 @@
 
             <div class="col-6 col-md-3 mb-3">
               <h6 class="fw-semibold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Connect</h6>
-              <div class="d-flex gap-3">
+              <div class="d-flex gap-2">
                 <a href="#" class="opacity-75" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
                   <i class="bi bi-twitter fs-5"></i>
                 </a>

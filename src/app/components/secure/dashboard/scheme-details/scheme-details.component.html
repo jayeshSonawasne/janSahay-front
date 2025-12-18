@@ -1,0 +1,97 @@
+<div class="dialog-header">
+    <h2 mat-dialog-title>
+        <span class="scheme-title">{{data.title}}</span>
+        <span class="scheme-category">{{data.category}}</span>
+    </h2>
+    <button mat-icon-button (click)="close()" class="close-btn"><i class="bi bi-x-lg"></i></button>
+</div>
+
+<mat-dialog-content>
+    <mat-tab-group animationDuration="0ms" class="custom-tabs">
+        <!-- Overview Tab -->
+        <mat-tab label="Overview">
+            <div class="tab-content">
+                <div class="hero-section" [style.background]="data.color + '15'">
+                    <i [class]="'bi ' + data.icon" [style.color]="data.color"></i>
+                    <p class="description">{{data.description}}</p>
+                    <div class="key-metrics">
+                        <div class="metric">
+                            <span class="label">Funding</span>
+                            <span class="value">{{data.funding}}</span>
+                        </div>
+                        <div class="metric">
+                            <span class="label">Deadline</span>
+                            <span class="value">{{data.deadline}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Key Benefits</h3>
+                <ul class="benefits-list">
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Financial assistance directly to bank
+                        account.</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Comprehensive insurance coverage.</li>
+                    <li><i class="bi bi-check-circle-fill text-success"></i> Skill development training included.</li>
+                </ul>
+            </div>
+        </mat-tab>
+
+        <!-- Eligibility Tab -->
+        <mat-tab label="Eligibility">
+            <div class="tab-content">
+                <div class="criteria-list">
+                    <div class="criteria-item">
+                        <div class="icon-box info"><i class="bi bi-person"></i></div>
+                        <div>
+                            <h4>Age Limit</h4>
+                            <p>Applicants must be between 18 and 60 years of age.</p>
+                        </div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="icon-box info"><i class="bi bi-cash"></i></div>
+                        <div>
+                            <h4>Income Criteria</h4>
+                            <p>Annual household income should be less than ₹2.5 Lakhs.</p>
+                        </div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="icon-box info"><i class="bi bi-geo-alt"></i></div>
+                        <div>
+                            <h4>Residency</h4>
+                            <p>Must be a permanent resident of the respective state.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+
+        <!-- Documents Tab -->
+        <mat-tab label="Documents">
+            <div class="tab-content">
+                <div class="docs-grid">
+                    <div class="doc-card">
+                        <i class="bi bi-card-heading"></i>
+                        <span>Aadhar Card</span>
+                    </div>
+                    <div class="doc-card">
+                        <i class="bi bi-file-text"></i>
+                        <span>Income Certificate</span>
+                    </div>
+                    <div class="doc-card">
+                        <i class="bi bi-house"></i>
+                        <span>Domicile Certificate</span>
+                    </div>
+                    <div class="doc-card">
+                        <i class="bi bi-bank"></i>
+                        <span>Bank Passbook</span>
+                    </div>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Close</button>
+    <button mat-raised-button color="primary" (click)="apply()">Apply Now</button>
+</mat-dialog-actions>

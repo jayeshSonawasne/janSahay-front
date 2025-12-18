@@ -1,0 +1,73 @@
+<div class="dialog-header">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div class="status-indicator" [ngClass]="getStatusClass(data.status)">
+            <i class="bi" [class.bi-check-lg]="data.status === 'Approved'"
+                [class.bi-clock]="data.status === 'Pending' || data.status === 'In Review'"
+                [class.bi-x-lg]="data.status === 'Rejected'"></i>
+        </div>
+        <div>
+            <h2 mat-dialog-title style="margin: 0; font-size: 1.125rem; font-weight: 700;">{{data.id}}</h2>
+            <span style="font-size: 0.8125rem; color: #64748b;">{{data.scheme}} • {{data.applicant}}</span>
+        </div>
+    </div>
+    <button mat-icon-button (click)="close()"><i class="bi bi-x-lg"></i></button>
+</div>
+
+<mat-dialog-content>
+    <div class="timeline-container">
+        <!-- Timeline Item 1 -->
+        <div class="timeline-item completed">
+            <div class="timeline-marker"><i class="bi bi-check"></i></div>
+            <div class="timeline-content">
+                <h4>Application Submitted</h4>
+                <p>Application form submitted successfully by applicant.</p>
+                <span class="time">{{data.date}}</span>
+                <div class="doc-attachment">
+                    <i class="bi bi-file-earmark-pdf"></i> Application_Form.pdf
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Item 2 -->
+        <div class="timeline-item" [class.completed]="data.progress > 30">
+            <div class="timeline-marker">
+                <i class="bi" [class.bi-check]="data.progress > 30" [class.bi-three-dots]="data.progress <= 30"></i>
+            </div>
+            <div class="timeline-content">
+                <h4>Document Verification</h4>
+                <p>Verification of attached Aadhar and Income certificates.</p>
+                <div *ngIf="data.status === 'Correction Needed'"
+                    style="margin-top: 0.5rem; padding: 0.75rem; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; color: #9f1239; font-size: 0.8125rem;">
+                    <strong>Comment:</strong> Income certificate image is blurry. Please re-upload.
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline Item 3 -->
+        <div class="timeline-item" [class.completed]="data.progress > 60">
+            <div class="timeline-marker">
+                <i class="bi" [class.bi-check]="data.progress > 60" [class.bi-three-dots]="data.progress <= 60"></i>
+            </div>
+            <div class="timeline-content">
+                <h4>Field Inspection</h4>
+                <p>Physical verification of beneficiary details.</p>
+            </div>
+        </div>
+
+        <!-- Timeline Item 4 -->
+        <div class="timeline-item" [class.completed]="data.progress === 100">
+            <div class="timeline-marker">
+                <i class="bi" [class.bi-check]="data.progress === 100" [class.bi-trophy]="data.progress < 100"></i>
+            </div>
+            <div class="timeline-content">
+                <h4>Final Approval</h4>
+                <p>Sanctioning of funds and final approval.</p>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Close</button>
+    <button mat-raised-button color="primary">Complete Verification</button>
+</mat-dialog-actions>
