@@ -215,3 +215,18 @@ button,
         /* Hide default pointer to keep custom cursor visible */
     }
 }
+
+/* Video Call Snackbar Styles */
+.incoming-call-snackbar {
+    --mdc-snackbar-container-color: #333;
+    --mdc-snackbar-supporting-text-color: #fff;
+
+    .mat-mdc-snack-bar-action,
+    .mat-simple-snackbar-action,
+    .mat-button {
+        color: #4caf50 !important;
+        /* Green */
+        font-weight: bold;
+        font-size: 1rem;
+    }
+}

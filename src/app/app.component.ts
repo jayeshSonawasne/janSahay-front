@@ -3,6 +3,8 @@ import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { ConfigService } from './core/services/config.service';
+import { SocketService } from './core/services/socket.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -16,10 +18,33 @@ export class AppComponent {
     private router: Router,
     private titleService: Title,
     private activatedRoute: ActivatedRoute,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private socketService: SocketService,
+    private snackbar: MatSnackBar
   ) {
     this.setDynamicPageTitle();
     this.scrollToTopOnNavigation();
+    this.initializeGlobalSocketListeners();
+  }
+
+  private initializeGlobalSocketListeners() {
+    this.socketService.onIncomingCall().subscribe((data) => {
+      // Only handle if NOT on the chatbox page to avoid duplicate alerts
+      if (this.router.url !== '/chatbox') {
+        console.log('Global incoming call listener triggered');
+
+        const snackBarRef = this.snackbar.open(`Incoming video call from ${data.from || 'Expert'}`, 'Accept', {
+          duration: 10000,
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: ['incoming-call-snackbar']
+        });
+
+        snackBarRef.onAction().subscribe(() => {
+          this.router.navigate(['/chatbox'], { state: { incomingCall: data } });
+        });
+      }
+    });
   }
 
   /**

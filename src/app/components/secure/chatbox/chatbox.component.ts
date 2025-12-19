@@ -26,6 +26,7 @@ import {
   ApplicationProgress,
   Document
 } from '../../../core/models/scheme.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 declare var bootstrap: any;
 
@@ -171,6 +172,7 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
   private callModalInstance: any;
   private applySchemeModalInstance: any;
   private videoCallModalInstance: any;
+  videoCallStatus: string = '';
 
   // Chat history
   chatHistory: ChatHistoryEntry[] = [];
@@ -181,7 +183,8 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     private applicationService: ApplicationService,
     public translationService: TranslationService,
     private chatHistoryService: ChatHistoryService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -193,7 +196,22 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadApplicationProgress();
     this.loadRequiredDocuments();
     this.loadChatHistory();
+    this.loadChatHistory();
     this.initializeSocketListeners();
+    this.checkIncomingCallFromRoute();
+  }
+
+  private checkIncomingCallFromRoute() {
+    const state = history.state;
+    if (state && state.incomingCall) {
+      const data = state.incomingCall;
+      console.log('Auto-joining call from route state', data);
+      // Small delay to ensure socket and view are ready
+      setTimeout(() => {
+        this.socketService.answerCall({ roomId: data.roomId });
+        this.startVideoCall(data.from || 'Expert', { roomId: data.roomId, isIncoming: true });
+      }, 500);
+    }
   }
 
   private initializeSocketListeners() {
@@ -226,6 +244,28 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }
     }));
+
+    this.subscriptions.add(this.socketService.onIncomingCall().subscribe((data) => {
+      console.log('Incoming call from', data.from);
+      console.log('Incoming call from', data.from);
+
+      const snackBarRef = this.snackbar.open(`Incoming video call from ${data.from || 'Expert'}`, 'Accept', {
+        duration: 10000,
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        panelClass: ['incoming-call-snackbar']
+      });
+
+      snackBarRef.onAction().subscribe(() => {
+        this.socketService.answerCall({ roomId: data.roomId });
+        this.startVideoCall(data.from || 'Expert', { roomId: data.roomId, isIncoming: true });
+      });
+    }));
+
+    this.subscriptions.add(this.socketService.onCallAccepted().subscribe(() => {
+      console.log('Call accepted by remote user');
+      this.videoCallStatus = 'Connected';
+    }));
   }
 
   ngOnDestroy() {
@@ -248,6 +288,59 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
     );
+  }
+
+  // ... (existing code) ...
+
+  startVideoCall(expertName: string, options: { roomId?: string, isIncoming?: boolean } = {}) {
+    this.isStartingVideoCall = true;
+    this.currentCallExpert = expertName;
+    this.isVideoOn = true;
+    this.isMuted = false;
+    this.isSpeakerOn = false;
+    this.videoCallTimer = '00:00';
+    this.isVideoMinimized = false;
+
+    // Use provided room ID or existing/default
+    if (options.roomId) {
+      this.roomId = options.roomId;
+    }
+
+    // Close expert modal and open video call modal
+    if (this.talkToExpertModalInstance) {
+      this.talkToExpertModalInstance.hide();
+    }
+
+    if (this.videoCallModalInstance) {
+      this.videoCallModalInstance.show();
+    }
+
+    // Webcam initialization moved to async block after modal shows
+
+    // Simulate video call connection with loading
+    setTimeout(() => {
+      this.isStartingVideoCall = false;
+      this.videoCallStartTime = new Date();
+      this.startVideoCallTimer();
+
+      // IMPORTANT: Attach video stream only AFTER the view is rendered (loading overlay gone)
+      // Small delay to ensure *ngIf change has processed and video tag exists
+      setTimeout(async () => {
+        await this.initializeLocalStream(); // Wait for stream
+        this.attachLocalStream();
+
+        // Join the room for signaling
+        this.socketService.joinRoom(this.roomId, 'user-' + Date.now());
+
+        // Notify user/expert of the call only if initiating
+        if (!options.isIncoming) {
+          this.socketService.callUser({ roomId: this.roomId, from: 'User' });
+        }
+      }, 100);
+
+      // Add chat message
+      this.addAssistantMessage(`Video call started with ${expertName}. Waiting for connection...`);
+    }, 3000); // 3 second connection delay
   }
 
   private loadFeaturedSchemes() {
@@ -611,46 +704,6 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     }, 3000); // 3 second connection delay
   }
 
-  startVideoCall(expertName: string) {
-    this.isStartingVideoCall = true;
-    this.currentCallExpert = expertName;
-    this.isVideoOn = true;
-    this.isMuted = false;
-    this.isSpeakerOn = false;
-    this.videoCallTimer = '00:00';
-    this.isVideoMinimized = false;
-
-    // Close expert modal and open video call modal
-    if (this.talkToExpertModalInstance) {
-      this.talkToExpertModalInstance.hide();
-    }
-
-    if (this.videoCallModalInstance) {
-      this.videoCallModalInstance.show();
-    }
-
-    // Start Webcam initialization immediately (permissions)
-    this.initializeLocalStream();
-
-    // Simulate video call connection with loading
-    setTimeout(() => {
-      this.isStartingVideoCall = false;
-      this.videoCallStartTime = new Date();
-      this.startVideoCallTimer();
-
-      // IMPORTANT: Attach video stream only AFTER the view is rendered (loading overlay gone)
-      // Small delay to ensure *ngIf change has processed and video tag exists
-      setTimeout(() => {
-        this.attachLocalStream();
-        // Join the room for signaling
-        this.socketService.joinRoom(this.roomId, 'user-' + Date.now());
-      }, 100);
-
-      // Add chat message
-      this.addAssistantMessage(`Video call started with ${expertName}. Waiting for connection...`);
-    }, 3000); // 3 second connection delay
-  }
-
   private createPeerConnection() {
     this.peerConnection = new RTCPeerConnection(this.rtcConfig);
 
@@ -766,33 +819,11 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isVideoOn = !this.isVideoOn;
     console.log(`Video ${this.isVideoOn ? 'enabled' : 'disabled'}`);
 
-    if (!this.localStream) return;
-
-    if (this.isVideoOn) {
-      // Turning Video ON: request a new video track because the old one was stopped
-      try {
-        const videoStream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const newVideoTrack = videoStream.getVideoTracks()[0];
-
-        if (newVideoTrack) {
-          this.localStream.addTrack(newVideoTrack);
-          // Refresh srcObject to ensure UI updates (sometimes needed)
-          if (this.localVideo && this.localVideo.nativeElement) {
-            this.localVideo.nativeElement.srcObject = this.localStream;
-          }
-        }
-      } catch (error) {
-        console.error('Error restarting video:', error);
-        this.isVideoOn = false; // Revert UI if failed
-        alert('Could not restart camera.');
+    if (this.localStream) {
+      const videoTrack = this.localStream.getVideoTracks()[0];
+      if (videoTrack) {
+        videoTrack.enabled = this.isVideoOn;
       }
-    } else {
-      // Turning Video OFF: stop the track completely to turn off the hardware LED
-      const videoTracks = this.localStream.getVideoTracks();
-      videoTracks.forEach(track => {
-        track.stop();
-        this.localStream?.removeTrack(track); // Remove ended track
-      });
     }
   }
 
@@ -848,7 +879,21 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     this.addAssistantMessage(`Your video call with ${this.currentCallExpert} has ended. Duration: ${this.videoCallTimer}`);
+
+    // Notify server of disconnection
+    this.socketService.leaveRoom(this.roomId, 'user-' + Date.now()); // Using dummy ID for now, ideally store userId
+
     this.stopLocalVideo();
+
+    // Cleanup PeerConnection
+    if (this.peerConnection) {
+      this.peerConnection.close();
+      this.peerConnection = null;
+    }
+
+    this.remoteStream = null;
+    this.remoteStreamActive = false;
+    this.isVideoOn = true; // Reset state for next call
   }
 
   openChatDuringCall() {
