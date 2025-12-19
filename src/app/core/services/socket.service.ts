@@ -7,8 +7,8 @@ import { io, Socket } from 'socket.io-client';
 })
 export class SocketService {
     private socket: Socket;
-    // private readonly URL = 'https://jansahay.onrender.com/';
-    private readonly URL = 'http://localhost:8585';
+    private readonly URL = 'https://jansahay.onrender.com/';
+    // private readonly URL = 'http://localhost:8585';
 
     constructor() {
         this.socket = io(this.URL);
