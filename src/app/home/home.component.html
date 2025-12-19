@@ -771,15 +771,16 @@
           <div class="cta-card bg-gradient-primary border-0 rounded-4 p-5 p-lg-6">
             <div class="row align-items-center">
               <div class="col-lg-8 mb-4 mb-lg-0">
-                <h2 class="display-6 fw-bold text-white mb-3">
+                <h2 class="display-6 fw-bold mb-3" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
                   Ready to Access Government Benefits?
                 </h2>
-                <p class="lead text-white opacity-90 mb-0">
+                <p class="lead opacity-90 mb-0" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
                   Join thousands of citizens who have successfully applied through JanSahay
                 </p>
               </div>
               <div class="col-lg-4 text-lg-end">
-                <button class="btn btn-light btn-lg px-5 py-3 fw-bold" (click)="goToChatbox()" [disabled]="isLoading">
+                <button class="btn btn-light btn-lg px-5 py-3 fw-bold" [class.btn-light]="isDarkMode"
+                  [class.btn-dark]="!isDarkMode" (click)="goToChatbox()" [disabled]="isLoading">
                   <span *ngIf="!isLoading">Get Started Now</span>
                   <ngx-spinner *ngIf="isLoading" name="homeSpinner" size="small" type="ball-clip-rotate"
                     [fullScreen]="false"></ngx-spinner>
