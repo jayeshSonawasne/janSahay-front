@@ -15,7 +15,7 @@
     [class.navbar-dark]="isDarkMode">
     <div class="container">
       <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="assets/images/jansahayLogo.png" alt="JanSahay" height="40" class="me-2">
+        <img src="assets/images/icon_s 1.png" alt="JanSahay" height="40" class="me-2">
         <span class="brand-text fw-bold fs-4">JanSahay</span>
       </a>
 
@@ -184,64 +184,71 @@
             </div>
 
             <!-- Right Visual -->
-            <div class="col-lg-6 position-relative">
-              <div class="position-relative">
-                <!-- Floating Cards -->
-                <div
-                  class="floating-card card-1 position-absolute top-0 start-0 bg-opacity-50 border border-opacity-10 rounded-3 p-3"
-                  [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
-                  [class.border-dark]="!isDarkMode">
-                  <div class="d-flex align-items-center">
-                    <div
-                      class="icon-wrapper bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
-                      style="width: 40px; height: 40px;">
-                      <i class="bi bi-check-lg text-white"></i>
-                    </div>
-                    <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Eligibility
-                      Check</span>
-                  </div>
+            <div class="col-lg-6">
+              <div class="d-flex flex-column align-items-center gap-4">
+
+                <!-- Main Image -->
+                <div class="main-visual position-relative text-center">
+                  <img src="assets/images/icon_s 1.png" alt="JanSahay Platform"
+                    class="img-fluid rounded-4 animate-float" />
+                  <div class="glow-effect position-absolute top-50 start-50 translate-middle"></div>
                 </div>
 
-                <div
-                  class="floating-card card-2 position-absolute top-50 end-0 bg-opacity-50 border border-opacity-10 rounded-3 p-3"
-                  [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
-                  [class.border-dark]="!isDarkMode">
-                  <div class="d-flex align-items-center">
-                    <div
-                      class="icon-wrapper bg-success rounded-circle d-flex align-items-center justify-content-center me-3"
-                      style="width: 40px; height: 40px;">
-                      <i class="bi bi-file-text text-white"></i>
-                    </div>
-                    <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Document
-                      Guide</span>
-                  </div>
-                </div>
+                <!-- Cards BELOW image -->
+                <div class="d-flex  gap-3 w-100 align-items-center">
 
-                <div
-                  class="floating-card card-3 position-absolute bottom-0 start-0 bg-opacity-50 border border-opacity-10 rounded-3 p-3"
-                  [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
-                  [class.border-dark]="!isDarkMode">
-                  <div class="d-flex align-items-center">
-                    <div
-                      class="icon-wrapper bg-warning rounded-circle d-flex align-items-center justify-content-center me-3"
-                      style="width: 40px; height: 40px;">
-                      <i class="bi bi-lightning text-white"></i>
+                  <!-- Card 1 -->
+                  <div class="floating-card bg-opacity-50 border border-opacity-10 rounded-3 p-3 w-75"
+                    [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                    [class.border-dark]="!isDarkMode">
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="icon-wrapper bg-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                        style="width: 20px; height: 20px;">
+                        <i class="bi bi-check-lg text-white"></i>
+                      </div>
+                      <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+                        Eligibility Check
+                      </span>
                     </div>
-                    <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">Quick
-                      Apply</span>
                   </div>
-                </div>
 
-                <!-- Main Logo/Image -->
-                <div class="main-visual position-relative">
-                  <div class="visual-container position-relative">
-                    <img src="assets/images/jansahayLogo.png" alt="JanSahay Platform"
-                      class="img-fluid rounded-4 animate-float">
-                    <div class="glow-effect position-absolute top-50 start-50 translate-middle"></div>
+                  <!-- Card 2 -->
+                  <div class="floating-card bg-opacity-50 border border-opacity-10 rounded-3 p-3 w-75"
+                    [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                    [class.border-dark]="!isDarkMode">
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="icon-wrapper bg-success rounded-circle d-flex align-items-center justify-content-center me-3"
+                        style="width: 20px; height: 20px;">
+                        <i class="bi bi-file-text text-white"></i>
+                      </div>
+                      <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+                        Document Guide
+                      </span>
+                    </div>
                   </div>
+
+                  <!-- Card 3 -->
+                  <div class="floating-card bg-opacity-50 border border-opacity-10 rounded-3 p-3 w-75"
+                    [class.bg-dark]="isDarkMode" [class.border-white]="isDarkMode" [class.bg-white]="!isDarkMode"
+                    [class.border-dark]="!isDarkMode">
+                    <div class="d-flex align-items-center">
+                      <div
+                        class="icon-wrapper bg-warning rounded-circle d-flex align-items-center justify-content-center me-3"
+                        style="width: 20px; height: 20px;">
+                        <i class="bi bi-lightning text-white"></i>
+                      </div>
+                      <span class="fw-medium" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">
+                        Quick Apply
+                      </span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -791,7 +798,7 @@
       <div class="row align-items-center">
         <div class="col-lg-4 mb-4 mb-lg-0">
           <div class="d-flex align-items-center mb-3">
-            <img src="assets/images/jansahayLogo.png" alt="JanSahay" height="40" class="me-3">
+            <img src="assets/images/icon_s 1.png" alt="JanSahay" height="40" class="me-3">
             <span class="fs-3 fw-bold" [class.text-white]="isDarkMode" [class.text-dark]="!isDarkMode">JanSahay</span>
           </div>
           <p class="opacity-75 mb-0" [class.text-light]="isDarkMode" [class.text-muted]="!isDarkMode">
