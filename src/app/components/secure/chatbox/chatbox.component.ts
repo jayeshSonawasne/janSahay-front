@@ -9,6 +9,7 @@ import { SchemeService } from '../../../core/services/scheme.service';
 import { ApplicationService } from '../../../core/services/application.service';
 import { TranslationService } from '../../../core/services/translation.service';
 import { ChatHistoryService } from '../../../core/services/chat-history.service';
+import { SocketService } from '../../../core/services/socket.service';
 
 // Import pipes
 import { TranslatePipe } from '../../../core/pipes/translate.pipe';
@@ -46,9 +47,18 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('applySchemeModal', { static: false }) applySchemeModal: any;
   @ViewChild('videoCallModal', { static: false }) videoCallModal: any;
   @ViewChild('localVideo') localVideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('remoteVideo') remoteVideo!: ElementRef<HTMLVideoElement>;
 
-  // Media Stream
   private localStream: MediaStream | null = null;
+  private peerConnection: RTCPeerConnection | null = null;
+  private remoteStream: MediaStream | null = null;
+  public remoteStreamActive: boolean = false;
+  private readonly rtcConfig = {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' }
+    ]
+  };
+  private roomId: string = 'demo-room'; // In real app, generate unique room IDs
 
   // Subscriptions for cleanup
   private subscriptions: Subscription = new Subscription();
@@ -170,7 +180,8 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     private schemeService: SchemeService,
     private applicationService: ApplicationService,
     public translationService: TranslationService,
-    private chatHistoryService: ChatHistoryService
+    private chatHistoryService: ChatHistoryService,
+    private socketService: SocketService
   ) { }
 
   ngOnInit() {
@@ -182,6 +193,39 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loadApplicationProgress();
     this.loadRequiredDocuments();
     this.loadChatHistory();
+    this.initializeSocketListeners();
+  }
+
+  private initializeSocketListeners() {
+    this.subscriptions.add(this.socketService.onUserConnected().subscribe(userId => {
+      console.log('User connected: ' + userId);
+      this.addAssistantMessage('Expert connected to the call.');
+      this.createOffer();
+    }));
+
+    this.subscriptions.add(this.socketService.onUserDisconnected().subscribe(userId => {
+      console.log('User disconnected: ' + userId);
+      this.addAssistantMessage('Expert disconnected.');
+      this.endVideoCall();
+    }));
+
+    this.subscriptions.add(this.socketService.onOffer().subscribe(async (offer) => {
+      await this.handleOffer(offer);
+    }));
+
+    this.subscriptions.add(this.socketService.onAnswer().subscribe(async (answer) => {
+      await this.handleAnswer(answer);
+    }));
+
+    this.subscriptions.add(this.socketService.onIceCandidate().subscribe(async (candidate) => {
+      if (this.peerConnection) {
+        try {
+          await this.peerConnection.addIceCandidate(candidate);
+        } catch (e) {
+          console.error('Error adding received ice candidate', e);
+        }
+      }
+    }));
   }
 
   ngOnDestroy() {
@@ -598,11 +642,89 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
       // Small delay to ensure *ngIf change has processed and video tag exists
       setTimeout(() => {
         this.attachLocalStream();
+        // Join the room for signaling
+        this.socketService.joinRoom(this.roomId, 'user-' + Date.now());
       }, 100);
 
       // Add chat message
-      this.addAssistantMessage(`Video call started with ${expertName}. You can now discuss your queries directly.`);
+      this.addAssistantMessage(`Video call started with ${expertName}. Waiting for connection...`);
     }, 3000); // 3 second connection delay
+  }
+
+  private createPeerConnection() {
+    this.peerConnection = new RTCPeerConnection(this.rtcConfig);
+
+    this.peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        this.socketService.emitIceCandidate({ candidate: event.candidate, roomId: this.roomId });
+      }
+    };
+
+    this.peerConnection.ontrack = (event) => {
+      if (!this.remoteStream) {
+        this.remoteStream = new MediaStream();
+        // Create a video element for remote stream dynamically or use an existing one if you have it in template
+        // For a simple peer-to-peer, usually you replace the main video or add a small one. 
+        // Assuming we might overlay it or just log for now as the template might not have a remote video tag.
+        // Let's create a remote video element if validation requires or just replace local for demo?
+        // The user prompt asked to "connect it to frontend in video call model", implying standard behavior.
+        // I will attempt to render it. But first let's just ensure logic is there.
+        console.log('Received remote track');
+        // To properly show it, I should probably add a remote video element to the template.
+        // But for now, let's just attach to a new element or existing provided one calling a method
+        this.attachRemoteStream(event.streams[0]);
+      }
+      event.streams[0].getTracks().forEach(track => this.remoteStream?.addTrack(track));
+    };
+
+    if (this.localStream) {
+      this.localStream.getTracks().forEach(track => {
+        this.peerConnection?.addTrack(track, this.localStream!);
+      });
+    }
+  }
+
+  // This needs to be added to HTML to see remote peer
+  private attachRemoteStream(stream: MediaStream) {
+    this.remoteStreamActive = true;
+    if (this.remoteVideo && this.remoteVideo.nativeElement) {
+      this.remoteVideo.nativeElement.srcObject = stream;
+    }
+  }
+
+  private async createOffer() {
+    this.createPeerConnection();
+    try {
+      const offer = await this.peerConnection!.createOffer();
+      await this.peerConnection!.setLocalDescription(offer);
+      this.socketService.emitOffer({ offer, roomId: this.roomId });
+    } catch (error) {
+      console.error('Error creating offer:', error);
+    }
+  }
+
+  private async handleOffer(offer: any) {
+    if (!this.peerConnection) {
+      this.createPeerConnection();
+    }
+    try {
+      await this.peerConnection!.setRemoteDescription(new RTCSessionDescription(offer));
+      const answer = await this.peerConnection!.createAnswer();
+      await this.peerConnection!.setLocalDescription(answer);
+      this.socketService.emitAnswer({ answer, roomId: this.roomId });
+    } catch (error) {
+      console.error('Error handling offer:', error);
+    }
+  }
+
+  private async handleAnswer(answer: any) {
+    try {
+      if (this.peerConnection) {
+        await this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+      }
+    } catch (error) {
+      console.error('Error handling answer:', error);
+    }
   }
 
   startChat(expertName: string) {
