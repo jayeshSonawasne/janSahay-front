@@ -5,6 +5,7 @@ import { PublicRoutingModule } from './public-routing.module';
 import { PublicComponent } from './public.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { TeamComponent } from './team/team.component';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { FooterComponent } from './footer/footer.component';
     PublicComponent,
   ],
   imports: [
+    TeamComponent,
     CommonModule,
     PublicRoutingModule,
     HeaderComponent,

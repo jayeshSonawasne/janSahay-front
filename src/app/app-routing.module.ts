@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './layouts/public/login/login.component';
+import { TeamComponent } from './team/team.component';
 
 const routes: Routes = [
   // 👉 Home route
@@ -12,7 +13,12 @@ const routes: Routes = [
     pathMatch: 'full',
     data: { breadcrumb: 'Home' }
   },
-
+  {
+    path: 'team',
+    component: TeamComponent,
+    pathMatch: 'full',
+    data: { breadcrumb: 'team' }
+  },
   // 👉 Public module pages
   {
     path: 'public',
