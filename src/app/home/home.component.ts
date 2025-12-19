@@ -46,20 +46,20 @@ export class HomeComponent implements OnInit, OnDestroy {
       social: { linkedin: '#', twitter: '#', instagram: '#', facebook: '#' }
     },
     {
-      name: 'Kiran Mane',
-      role: 'Sr. Mobile Application Developer',
-      workInfo: 'Building robust mobile architectures for seamless performance.',
-      expertise: ['Mobile Architecture', 'Performance Optimization', 'App Security'],
-      image: 'assets/images/Kiran_Mane.png',
-      isLead: false,
-      social: { linkedin: '#', twitter: '#', instagram: '#', facebook: '#' }
-    },
-    {
       name: 'Uddhav Bade',
       role: 'Sr. Mobile Application Developer',
       workInfo: 'Developing cross-platform solutions with native-like performance.',
       expertise: ['Native Development', 'Cross-Platform', 'API Integration'],
       image: 'assets/images/Uddhav_Bade.png',
+      isLead: false,
+      social: { linkedin: '#', twitter: '#', instagram: '#', facebook: '#' }
+    },
+    {
+      name: 'Kiran Mane',
+      role: 'Sr. Mobile Application Developer',
+      workInfo: 'Building robust mobile architectures for seamless performance.',
+      expertise: ['Mobile Architecture', 'Performance Optimization', 'App Security'],
+      image: 'assets/images/Kiran_Mane.png',
       isLead: false,
       social: { linkedin: '#', twitter: '#', instagram: '#', facebook: '#' }
     },
