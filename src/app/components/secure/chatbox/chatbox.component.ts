@@ -53,6 +53,10 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
   // Subscriptions for cleanup
   private subscriptions: Subscription = new Subscription();
 
+  // Responsive State
+  isSidebarOpen = false;
+  isRightPanelOpen = false;
+
   isShrink = false;
   activeTab: 'discover' | 'eligibility' | 'apply' | 'updates' = 'discover';
   showEligibilityResults = false;
@@ -371,6 +375,20 @@ export class ChatboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleChatSize() {
     this.isShrink = !this.isShrink;
+  }
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+    if (this.isSidebarOpen) {
+      this.isRightPanelOpen = false; // Close other panel
+    }
+  }
+
+  toggleRightPanel() {
+    this.isRightPanelOpen = !this.isRightPanelOpen;
+    if (this.isRightPanelOpen) {
+      this.isSidebarOpen = false; // Close other panel
+    }
   }
 
   toggleLanguage() {

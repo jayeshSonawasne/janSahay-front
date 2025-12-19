@@ -4668,3 +4668,125 @@
     }
   }
 }
+
+
+// ============================================
+// MOBILE RESPONSIVENESS
+// ============================================
+@media (max-width: 991px) {
+
+  .chatbox-container {
+    padding: 10px;
+  }
+
+  // Header adjustments
+  .d-flex.justify-content-between {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .ai-logo {
+    width: 32px;
+  }
+
+  // Sidebar - Mobile Drawer
+  .left-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px;
+
+    &.mobile-open {
+      transform: translateX(0);
+    }
+  }
+
+  // Right Content - Mobile Drawer
+  .right-content {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%) !important; // Override expanded logic
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px;
+    margin: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+
+    &.mobile-open {
+      transform: translateX(0) !important;
+    }
+  }
+
+  // Chatbox Wrapper
+  .chatbox-wrapper {
+    gap: 0;
+  }
+
+  .chatbox-container.card-shadow {
+    width: 100% !important; // override collapsed width
+
+    &.collapsed {
+      width: 100% !important;
+    }
+  }
+
+  // Backdrop
+  .mobile-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+// Small Mobile Adjustments
+@media (max-width: 576px) {
+  .chatbox-container {
+    padding: 0; // Full bleed
+  }
+
+  .chatbox-container.card-shadow {
+    border-radius: 0;
+  }
+
+  .btn-notify,
+  .btn-settings,
+  .btn-theme,
+  .btn-translate {
+    display: none; // Hide non-essential icons on very small screens if crowded
+  }
+
+  .avatar-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+}
